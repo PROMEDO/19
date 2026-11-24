@@ -1939,6 +1939,8 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
         loyaltyCustomerName: customerName,
         loyaltyCustomerPhone: customerPhone,
         restaurantName: rest.n,
+        googleMapsUrl: rest.mapUrl || addons.locationLinks?.googleMapsUrl || '',
+        wazeUrl: rest.wazeUrl || addons.locationLinks?.wazeUrl || '',
       }),
     [
       addons,
@@ -1958,6 +1960,8 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
       customerName,
       customerPhone,
       rest.n,
+      rest.mapUrl,
+      rest.wazeUrl,
       fmtMoney,
     ]
   );
@@ -2328,7 +2332,11 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
         dineInDiscountAmt;
       const totalDiscount = itemsDiscountTotal + orderLevelDiscountTotal;
       const pickupLabelText = addons.pickupInstantDiscount?.title || 'خصم الاستلام الفوري';
-      const dineInLabelText = addons.dineInDiscount?.title || 'خصم طلبات الصالة';
+      const rawDineInTitle = (addons.dineInDiscount?.title || '').trim();
+      const dineInLabelText =
+        !rawDineInTitle || rawDineInTitle === 'خصم طلبات الصالة' || rawDineInTitle === 'خصم خاص لطلبات الصالة'
+          ? 'خصم على طلبات الصالة'
+          : rawDineInTitle;
       const menuDiscountLabelText =
         itemsDiscountTotal > 0 || menuOrderDiscountAmt > 0
           ? activeMenuDiscount.sourceLabel || 'خصم على الأطباق'
@@ -3312,7 +3320,7 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
                   color: isLightMenu ? '#047857' : '#6ee7b7',
                 }}
               >
-                🍽️ {addons.dineInDiscount.title || 'خصم طلبات الصالة'}: {addons.dineInDiscount.discountPercent || 10}% تلقائي
+                🍽️ {(!addons.dineInDiscount.title || addons.dineInDiscount.title === 'خصم طلبات الصالة' || addons.dineInDiscount.title === 'خصم خاص لطلبات الصالة') ? 'خصم على طلبات الصالة' : addons.dineInDiscount.title}: {addons.dineInDiscount.discountPercent || 10}% تلقائي
               </span>
             )}
           </div>
@@ -5385,7 +5393,7 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
                     )}
                     {dineInDiscountAmt > 0 && (
                       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', color: accentText }}>
-                        <span>{addons.dineInDiscount?.title || 'خصم طلبات الصالة'} ({dineInPct}%)</span>
+                        <span>{(!addons.dineInDiscount?.title || addons.dineInDiscount.title === 'خصم طلبات الصالة' || addons.dineInDiscount.title === 'خصم خاص لطلبات الصالة') ? 'خصم على طلبات الصالة' : addons.dineInDiscount.title} ({dineInPct}%)</span>
                         <b className="tabular-nums">-{fmtMoney(dineInDiscountAmt)}</b>
                       </div>
                     )}
@@ -5831,16 +5839,28 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
                     }}
                   >
                     <b>معلومات فرع الاستلام: {rest.n}</b>
-                    {rest.mapUrl && (
-                      <div style={{ marginTop: '4px' }}>
-                        <a
-                          href={rest.mapUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{ color: accentText, fontWeight: 700, textDecoration: 'underline' }}
-                        >
-                          عرض موقع الفرع على خرائط جوجل ←
-                        </a>
+                    {(rest.mapUrl || addons.locationLinks?.googleMapsUrl || rest.wazeUrl || addons.locationLinks?.wazeUrl) && (
+                      <div style={{ marginTop: '4px', display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                        {(rest.mapUrl || addons.locationLinks?.googleMapsUrl) && (
+                          <a
+                            href={rest.mapUrl || addons.locationLinks?.googleMapsUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ color: accentText, fontWeight: 700, textDecoration: 'underline' }}
+                          >
+                            خرائط كوكل ←
+                          </a>
+                        )}
+                        {(rest.wazeUrl || addons.locationLinks?.wazeUrl) && (
+                          <a
+                            href={rest.wazeUrl || addons.locationLinks?.wazeUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ color: accentText, fontWeight: 700, textDecoration: 'underline' }}
+                          >
+                            موقع ويز (Waze) ←
+                          </a>
+                        )}
                       </div>
                     )}
 
@@ -5985,16 +6005,30 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
                 </button>
               )}
 
-              {rest.mapUrl && (
+              {(rest.mapUrl || addons.locationLinks?.googleMapsUrl) && (
                 <a
-                  href={rest.mapUrl}
+                  href={rest.mapUrl || addons.locationLinks?.googleMapsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="pm-option-row"
                   style={{ textDecoration: 'none' }}
                 >
                   <span style={{ fontWeight: 800, fontSize: '14.5px', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                    <MapPin size={16} /> الموقع على الخريطة
+                    <MapPin size={16} /> الموقع على خرائط كوكل
+                  </span>
+                  <ChevronLeft size={16} />
+                </a>
+              )}
+              {(rest.wazeUrl || addons.locationLinks?.wazeUrl) && (
+                <a
+                  href={rest.wazeUrl || addons.locationLinks?.wazeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="pm-option-row"
+                  style={{ textDecoration: 'none' }}
+                >
+                  <span style={{ fontWeight: 800, fontSize: '14.5px', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                    <MapPin size={16} /> الموقع على ويز (Waze)
                   </span>
                   <ChevronLeft size={16} />
                 </a>

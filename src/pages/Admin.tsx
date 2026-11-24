@@ -254,10 +254,6 @@ export const AdminView: React.FC<AdminViewProps> = ({
     const targetPath = `/admin/${t}`;
     if (window.location.pathname !== targetPath) {
       onNavigate(targetPath);
-    } else {
-      void syncFromServer().then((ok) => {
-        if (ok) onRefresh();
-      });
     }
   };
 

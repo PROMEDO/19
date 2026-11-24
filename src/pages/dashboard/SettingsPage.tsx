@@ -4,7 +4,7 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 import {
   AlertCircle,
   Check,
@@ -128,6 +128,8 @@ export const SettingsPage: React.FC = () => {
     setRestInstagram,
     restMapUrl,
     setRestMapUrl,
+    restWazeUrl,
+    setRestWazeUrl,
     restGoogleReviewUrl,
     setRestGoogleReviewUrl,
     restFacebook,
@@ -369,7 +371,7 @@ export const SettingsPage: React.FC = () => {
           void flushAllPendingSaves();
         }}
       >
-        <AnimatePresence mode="wait">
+        <>
           {/* 1. التبويب الأول: التشغيل (الحالة، العملة وطرق الطلبات، قناة الوصول، أوقات الدوام، مناطق وأسعار التوصيل) */}
           {sectionTab === 'ops' && (
             <motion.div
@@ -711,15 +713,13 @@ export const SettingsPage: React.FC = () => {
                   </button>
                 </div>
 
-                <AnimatePresence initial={false}>
-                  {workMode === 'c' && (
-                    <motion.div
-                      initial={prefersReducedMotion ? false : { opacity: 0, x: -12, scale: 0.99 }}
-                      animate={{ opacity: 1, x: 0, scale: 1 }}
-                      exit={prefersReducedMotion ? undefined : { opacity: 0, x: 10, scale: 0.99 }}
-                      transition={{ duration: 0.45, ease: DASH_EASE }}
-                      style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
-                    >
+                {workMode === 'c' && (
+                  <motion.div
+                    initial={prefersReducedMotion ? false : { opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.22, ease: DASH_EASE }}
+                    style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
+                  >
                       {/* Quick Unified Time Bar */}
                       <div className="mp-set2-hours-quick">
                         <div className="mp-set2-hours-quick-label">توقيت موحد للأيام المفتوحة:</div>
@@ -828,8 +828,7 @@ export const SettingsPage: React.FC = () => {
                         })}
                       </div>
                     </motion.div>
-                  )}
-                </AnimatePresence>
+                )}
               </div>
 
               {/* Delivery Zones & Fees */}
@@ -1611,11 +1610,11 @@ export const SettingsPage: React.FC = () => {
                   />
                 </label>
 
-                <div className="mp-set2-grid-2">
+                <div className="mp-set2-grid-3">
                   <label className="f" style={{ marginBottom: 0 }}>
-                    رابط خرائط جوجل
+                    رابط خرائط كوكل (Google Maps)
                     <input
-                      type="text"
+                      type="url"
                       dir="ltr"
                       value={restMapUrl}
                       onChange={(e) => setRestMapUrl(e.target.value)}
@@ -1626,9 +1625,22 @@ export const SettingsPage: React.FC = () => {
                   </label>
 
                   <label className="f" style={{ marginBottom: 0 }}>
+                    رابط ويز (Waze)
+                    <input
+                      type="url"
+                      dir="ltr"
+                      value={restWazeUrl}
+                      onChange={(e) => setRestWazeUrl(e.target.value)}
+                      placeholder="https://waze.com/ul?ll=..."
+                      className="mp-themed-input"
+                      style={{ textAlign: 'left' }}
+                    />
+                  </label>
+
+                  <label className="f" style={{ marginBottom: 0 }}>
                     رابط التقييمات (اختياري)
                     <input
-                      type="text"
+                      type="url"
                       dir="ltr"
                       value={restGoogleReviewUrl}
                       onChange={(e) => setRestGoogleReviewUrl(e.target.value)}
@@ -1637,6 +1649,9 @@ export const SettingsPage: React.FC = () => {
                       style={{ textAlign: 'left' }}
                     />
                   </label>
+                </div>
+                <div style={{ fontSize: '12.5px', color: 'var(--muted)', fontWeight: 600 }}>
+                  تظهر روابط خرائط كوكل وويز داخل المنيو وكذلك كزرين مباشرين داخل بطاقة «خصم على طلبات الصالة».
                 </div>
               </div>
 
@@ -1703,7 +1718,7 @@ export const SettingsPage: React.FC = () => {
               />
             </motion.div>
           )}
-        </AnimatePresence>
+        </>
       </form>
 
       <MediaLibraryModal

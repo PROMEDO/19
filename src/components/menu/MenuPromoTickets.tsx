@@ -50,6 +50,8 @@ export interface BuildMenuPromoTicketsInput {
   loyaltyCustomerName?: string;
   loyaltyCustomerPhone?: string;
   restaurantName?: string;
+  googleMapsUrl?: string;
+  wazeUrl?: string;
 }
 
 function normalizeSafeMapUrl(raw?: string): string {
@@ -78,6 +80,8 @@ export function buildMenuPromoTickets({
   loyaltyCustomerName = '',
   loyaltyCustomerPhone = '',
   restaurantName = '',
+  googleMapsUrl = '',
+  wazeUrl = '',
 }: BuildMenuPromoTicketsInput): MenuPromoTicketItem[] {
   const tickets: MenuPromoTicketItem[] = [];
   const resolveMinOrderText = (addonMin = 0) => {
@@ -115,9 +119,12 @@ export function buildMenuPromoTickets({
     const discountLabel = isFixed
       ? `خصم ${formatMoney(activeMenuDiscount.value)}`
       : `خصم ${formatNumber(activeMenuDiscount.value)}٪`;
+    const isLimitedTakeaway = activeMenuDiscount.sourceType === 'limitedTime';
     const eyebrow =
       activeMenuDiscount.sourceType === 'happyHour'
         ? 'ساعة السعادة'
+        : isLimitedTakeaway
+        ? 'خصم على طلبات السفري'
         : activeMenuDiscount.sourceType === 'countdown'
         ? addons.countdownTimer?.title?.trim() || 'على طلبك القادم'
         : 'على طلبك القادم';
@@ -130,12 +137,15 @@ export function buildMenuPromoTickets({
       eyebrow,
       title: discountLabel,
       footer: 'يُطبق تلقائياً',
-      modalTitle:
-        maxCap > 0 && !isFixed
-          ? `خصم ${formatNumber(activeMenuDiscount.value)}٪ لغاية ${formatMoney(maxCap)}`
-          : isFixed
-          ? `خصم ${formatMoney(activeMenuDiscount.value)} على طلبك`
-          : `خصم ${formatNumber(activeMenuDiscount.value)}٪ على طلبك`,
+      modalTitle: isLimitedTakeaway
+        ? maxCap > 0 && !isFixed
+          ? `خصم ${formatNumber(activeMenuDiscount.value)}٪ على طلبات السفري لغاية ${formatMoney(maxCap)}`
+          : `خصم ${formatNumber(activeMenuDiscount.value)}٪ على طلبات السفري`
+        : maxCap > 0 && !isFixed
+        ? `خصم ${formatNumber(activeMenuDiscount.value)}٪ لغاية ${formatMoney(maxCap)}`
+        : isFixed
+        ? `خصم ${formatMoney(activeMenuDiscount.value)} على طلبك`
+        : `خصم ${formatNumber(activeMenuDiscount.value)}٪ على طلبك`,
       minOrderText: resolveMinOrderText(minReq),
       maxDiscountText: maxCap > 0 ? formatMoney(maxCap) : 'لا يوجد حد أقصى',
     });
@@ -182,23 +192,32 @@ export function buildMenuPromoTickets({
     if (dineInPct > 0) {
       const minReq = Math.max(0, Number(addons.dineInDiscount.minOrderAmount || 0));
       const maxCap = Math.max(0, Number(addons.dineInDiscount.maxDiscountAmount || 0));
-      const customTitle = (addons.dineInDiscount.title || '').trim();
+      const rawTitle = (addons.dineInDiscount.title || '').trim();
+      const eyebrowTitle =
+        !rawTitle || rawTitle === 'خصم خاص لطلبات الصالة' || rawTitle === 'خصم طلبات الصالة'
+          ? 'خصم على طلبات الصالة'
+          : rawTitle;
       const isTableSelected = orderType === 'table';
+      const safeGoogleMapsUrl = normalizeSafeMapUrl(googleMapsUrl);
+      const safeWazeUrl = normalizeSafeMapUrl(wazeUrl);
       tickets.push({
         id: 'promo-dinein-discount',
         kind: 'discount',
-        eyebrow: customTitle || 'لطلبات الصالة',
+        eyebrow: eyebrowTitle,
         title: `خصم ${formatNumber(dineInPct)}٪`,
         footer: isTableSelected ? 'مُفعّل لطلبك ✓' : 'عند الطلب داخل الصالة',
         isUnlocked: isTableSelected,
         modalTitle:
           maxCap > 0
-            ? `خصم ${formatNumber(dineInPct)}٪ لطلبات الصالة لغاية ${formatMoney(maxCap)}`
+            ? `خصم ${formatNumber(dineInPct)}٪ على طلبات الصالة لغاية ${formatMoney(maxCap)}`
             : `خصم ${formatNumber(dineInPct)}٪ على طلبات الصالة`,
         minOrderText: resolveMinOrderText(minReq),
         maxDiscountText: maxCap > 0 ? formatMoney(maxCap) : 'لا يوجد حد أقصى',
         canSwitchToTable: canSelectTable && !isTableSelected,
         isTableSelected,
+        googleMapsUrl: safeGoogleMapsUrl || undefined,
+        wazeUrl: safeWazeUrl || undefined,
+        restaurantName,
       });
     }
   }
@@ -218,25 +237,6 @@ export function buildMenuPromoTickets({
       minOrderText: hasMin ? formatMoney(freeDeliveryMin) : 'لا يوجد حد أدنى',
       maxDiscountText: maxCap > 0 ? formatMoney(maxCap) : 'لا يوجد حد أقصى',
     });
-  }
-
-  if (addons.locationLinks?.enabled) {
-    const googleMapsUrl = normalizeSafeMapUrl(addons.locationLinks.googleMapsUrl);
-    const wazeUrl = normalizeSafeMapUrl(addons.locationLinks.wazeUrl);
-    if (googleMapsUrl || wazeUrl) {
-      const locTitle = (addons.locationLinks.title || '').trim() || 'موقع المطعم';
-      tickets.push({
-        id: 'promo-location-links',
-        kind: 'location',
-        eyebrow: 'الاتجاهات والخرائط',
-        title: locTitle,
-        footer: 'افتح الموقع',
-        modalTitle: locTitle,
-        googleMapsUrl,
-        wazeUrl,
-        restaurantName,
-      });
-    }
   }
 
   return tickets;
@@ -895,6 +895,45 @@ export const MenuPromoTickets: React.FC<MenuPromoTicketsProps> = ({
                     </strong>
                   </div>
                 </div>
+                {(liveActiveTicket.googleMapsUrl || liveActiveTicket.wazeUrl) && (
+                  <>
+                    <span className="mp-promo-sheet-ticket-divider" aria-hidden="true" />
+                    <div
+                      style={{
+                        fontSize: '12px',
+                        fontWeight: 700,
+                        color: 'var(--mp-sheet-muted)',
+                        marginBottom: '8px',
+                      }}
+                    >
+                      موقع {liveActiveTicket.restaurantName || 'المطعم'} للوصول إلى الصالة
+                    </div>
+                    <div className="mp-promo-sheet-loc-grid">
+                      {liveActiveTicket.googleMapsUrl && (
+                        <a
+                          href={liveActiveTicket.googleMapsUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mp-promo-sheet-loc-btn is-google"
+                        >
+                          <GoogleMapsMiniIcon />
+                          <span>فتح في خرائط كوكل</span>
+                        </a>
+                      )}
+                      {liveActiveTicket.wazeUrl && (
+                        <a
+                          href={liveActiveTicket.wazeUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mp-promo-sheet-loc-btn is-waze"
+                        >
+                          <WazeMiniIcon />
+                          <span>فتح في ويز (Waze)</span>
+                        </a>
+                      )}
+                    </div>
+                  </>
+                )}
                 <span className="mp-promo-sheet-ticket-divider" aria-hidden="true" />
                 <div
                   className={`mp-promo-sheet-ticket-footer ${

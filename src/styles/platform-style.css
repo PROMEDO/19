@@ -11269,8 +11269,6 @@ html[data-theme="light"] .mp-sb-branch-select {
 .mp-addon-square-card {
   aspect-ratio: 1 / 1;
   background: var(--mp-glass-bg);
-  backdrop-filter: blur(10px) saturate(1.35);
-  -webkit-backdrop-filter: blur(10px) saturate(1.35);
   border: 1px solid var(--mp-glass-border);
   box-shadow: var(--mp-glass-shadow);
   border-radius: 20px;
@@ -11281,13 +11279,14 @@ html[data-theme="light"] .mp-sb-branch-select {
   gap: 8px;
   overflow: hidden;
   min-width: 0;
-  transition: border-color 0.38s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.38s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.38s cubic-bezier(0.22, 1, 0.36, 1), transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+  contain: layout style;
+  transition: border-color 0.18s ease, background-color 0.18s ease, transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .mp-addon-square-card.is-enabled {
   border: 1.5px solid color-mix(in srgb, var(--brand) 65%, var(--mp-glass-border));
   background: color-mix(in srgb, var(--brand) 14%, transparent);
-  box-shadow: 0 8px 24px color-mix(in srgb, var(--brand) 16%, transparent);
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--brand) 14%, transparent);
 }
 
 .mp-addon-square-card.is-locked {
@@ -11518,10 +11517,13 @@ html[data-theme="light"] .mp-sb-branch-select {
   }
 }
 
-/* Fixed Flex-Centered Portaled Addon Edit & Setup Modal */
+/* Fixed Flex-Centered Portaled Addon Edit & Setup Modal (visualViewport keyboard aware) */
 .mp-addon-modal-overlay {
   position: fixed;
-  inset: 0;
+  inset-inline: 0;
+  top: var(--mp-vv-offset-top, 0px);
+  height: var(--mp-vv-height, 100dvh);
+  bottom: auto;
   z-index: 100050;
   display: flex;
   align-items: center;
@@ -11530,17 +11532,18 @@ html[data-theme="light"] .mp-sb-branch-select {
   background: rgba(2, 6, 23, 0.72);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
+  transition: top 0.14s ease-out, height 0.14s ease-out;
 }
 
 .mp-addon-modal-card,
 .mp-addon-preview-card {
   width: min(560px, 100%);
-  max-height: min(88dvh, 740px);
+  max-height: min(calc(var(--mp-vv-height, 100dvh) - 32px), 740px);
   border-radius: 22px;
   border: 1px solid var(--mp-glass-border);
   background: var(--mp-glass-bg-elevated);
-  backdrop-filter: blur(13px) saturate(1.4);
-  -webkit-backdrop-filter: blur(13px) saturate(1.4);
+  backdrop-filter: var(--mp-glass-modal-blur);
+  -webkit-backdrop-filter: var(--mp-glass-modal-blur);
   color: var(--ink);
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.44);
   display: flex;
@@ -11814,19 +11817,20 @@ html[data-theme="light"] .mp-addon-endday-badge {
 
 @media (max-width: 640px) {
   .mp-addon-modal-overlay {
-    align-items: flex-end;
-    padding: 0;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
   }
 
   .mp-addon-modal-card {
-    width: 100%;
-    max-height: 92dvh;
-    border-radius: 20px 20px 0 0;
-    border-bottom: 0;
+    width: min(540px, 100%);
+    max-height: calc(var(--mp-vv-height, 100dvh) - 24px);
+    border-radius: 22px;
+    border-bottom: 1px solid var(--mp-glass-border);
   }
 
   .mp-addon-modal-form {
-    max-height: 92dvh;
+    max-height: calc(var(--mp-vv-height, 100dvh) - 24px);
   }
 
   .mp-addon-modal-header {
@@ -11849,7 +11853,7 @@ html[data-theme="light"] .mp-addon-endday-badge {
   }
 
   .mp-addon-modal-footer {
-    padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+    padding: 12px 16px;
   }
 
   .mp-addon-footer-btn {
@@ -19561,44 +19565,27 @@ html[data-theme="dark"][data-shell-backdrop="liquid-image"] .shell::before {
 /* --------------------------------------------------------------------------
    1. Universal Blurry Liquid Glass Panels, Cards, Nested Blocks & Tables
    -------------------------------------------------------------------------- */
-.shell .mp-branch-card:not(.is-active),
+/* Structural Container Panels & Hero Cards (Retain Full 50%-Reduced Frosted Glass Blur) */
 .shell .mp-surface-card,
 html[data-theme] .shell .card,
 .shell .card,
-.shell .kp,
-.shell .mp-item-card,
-.shell .mp-set-card,
 .shell .mp-set2-panel,
 .shell .mp-set2-hero:not(.is-paused),
-.shell .mp-home-shortcut-card:not(.is-active-warn),
 .shell .mp-home-tips-box,
 .shell .mp-stats-filter-card,
 .shell .mp-stats-hero-card,
-.shell .mp-stats-kpi-tile,
 .shell .mp-stats-panel,
-.shell .mp-addon-square-card:not(.is-enabled),
 .shell .mp-addon-preview-card,
-.shell .mp-order-row,
 .shell .mp-pwa-banner,
 .shell .mp-compass-search-bar,
 .shell .mp-items-cats-bar,
-.shell .mp-tab-order-tile:not(.is-dragging),
-.shell .mp-appearance-layout-card:not(.selected),
-.shell .mp-appearance-theme-card:not(.selected),
-.shell .mp-appearance-shape-card:not(.selected),
-.shell .mp-estore-appearance-card,
 .shell .mp-estore-preview-frame,
-.shell .mp-estore-quick-btn,
-.shell .mp-sb-store-card,
-.shell .mp-sb-branch-card,
 html[data-theme] .shell .mp-admin-settings-sections .mp-framed-box,
 html[data-theme] .shell .mp-admin-settings-sections .mp-compact-payment-box,
 html[data-theme] .shell .mp-admin-settings-sections .mp-tabs-col-box,
 .shell .mp-he-stage,
-.shell .mp-acc-kpi-card,
 .shell .mp-acc-toolbar,
 .shell .mp-acc-table-card,
-.shell .mp-acc-mobile-card,
 html[data-theme] .home-root .card,
 .home-root .card,
 .home-root .feature-compact-card,
@@ -19621,10 +19608,42 @@ html[data-theme] .home-root .mp-auth-glass-card,
   box-shadow: var(--mp-glass-shadow) !important;
   color: var(--ink);
   transition:
-    background 0.24s ease,
-    box-shadow 0.24s ease,
-    border-color 0.22s ease,
-    transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+    background 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* High-Frequency Scrolling Dashboard Grid & List Cards (Translucent Crystal Over Grid — Zero GPU Per-Tile Blur Thrash) */
+.shell .mp-branch-card:not(.is-active),
+.shell .kp,
+.shell .mp-item-card,
+.shell .mp-set-card,
+.shell .mp-home-shortcut-card:not(.is-active-warn),
+.shell .mp-stats-kpi-tile,
+.shell .mp-addon-square-card:not(.is-enabled),
+.shell .mp-order-row,
+.shell .mp-tab-order-tile:not(.is-dragging),
+.shell .mp-appearance-layout-card:not(.selected),
+.shell .mp-appearance-theme-card:not(.selected),
+.shell .mp-appearance-shape-card:not(.selected),
+.shell .mp-estore-appearance-card,
+.shell .mp-estore-quick-btn,
+.shell .mp-sb-store-card,
+.shell .mp-sb-branch-card,
+.shell .mp-acc-kpi-card,
+.shell .mp-acc-mobile-card {
+  position: relative;
+  background: var(--mp-glass-bg) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 1px solid var(--mp-glass-border) !important;
+  box-shadow: var(--mp-glass-shadow) !important;
+  color: var(--ink);
+  contain: layout style;
+  transition:
+    background-color 0.16s ease,
+    border-color 0.16s ease,
+    transform 0.16s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* Crisp Unstacked Inner Sub-Containers (No Double Blur Stacking Inside Cards) */
@@ -19798,14 +19817,8 @@ html[data-theme] .shell .mp-acc-table thead th,
   border-bottom: 1px solid var(--mp-glass-divider) !important;
 }
 
-/* Directional 1px Curved Glass Specular Edge Ring Across ALL Viewports */
-.shell .mp-branch-card::before,
+/* Directional 1px Curved Glass Specular Edge Ring on Structural Shells & Modals (Zero Mask Overhead on Scrolling Grid Tiles) */
 .shell .mp-surface-card::before,
-.shell .mp-addon-square-card.is-enabled::before,
-.shell .mp-appearance-layout-card.selected::before,
-.shell .mp-appearance-theme-card.selected::before,
-.shell .mp-appearance-shape-card.selected::before,
-.shell .mp-set2-hero.is-paused::before,
 .mp-auth-page .card::before,
 .mp-onboard-shell .card::before,
 .ajax-box::before,
@@ -19818,44 +19831,19 @@ html[data-theme] .shell .mp-acc-table thead th,
 .profile-popover::before,
 html[data-theme] .shell .app-topbar::before,
 .home-root .nav::before,
-.shell .card::before,
-.shell .kp::before,
-.shell .mp-item-card:not([style*="var(--brand)"])::before,
-.shell .mp-set-card::before,
 .shell .mp-set2-panel::before,
 .shell .mp-set2-hero:not(.is-paused)::before,
+.shell .mp-set2-hero.is-paused::before,
 .shell .mp-set2-tabs-bar::before,
-.shell .mp-home-shortcut-card:not(.is-active-warn)::before,
 .shell .mp-home-tips-box::before,
 .shell .mp-stats-filter-card::before,
 .shell .mp-stats-hero-card::before,
-.shell .mp-stats-kpi-tile::before,
 .shell .mp-stats-panel::before,
 .shell .mp-stats-seg-track::before,
-.shell .mp-stats-mini-tabs::before,
-.shell .mp-addon-square-card:not(.is-enabled)::before,
 .shell .mp-orders-tabs::before,
-.shell .mp-appearance-mode-tabs::before,
-.shell .mp-order-row::before,
-.shell .mp-pwa-banner::before,
-.shell .mp-compass-search-bar::before,
-.shell .mp-tab-order-tile:not(.is-dragging)::before,
-.shell .mp-appearance-layout-card:not(.selected)::before,
-.shell .mp-appearance-theme-card:not(.selected)::before,
-.shell .mp-appearance-shape-card:not(.selected)::before,
-.shell .mp-admin-settings-sections .mp-framed-box::before,
 .shell .mp-he-stage::before,
-.shell .mp-he-tabs::before,
-.shell .mp-he-plan-tabs::before,
-.shell .mp-acc-kpi-card::before,
-.shell .mp-acc-toolbar::before,
 .shell .mp-acc-table-card::before,
-.shell .mp-acc-mobile-card::before,
-.shell .mp-theme-icon-switch::before,
-.shell .mp-set2-seg-2::before,
 .home-root .card::before,
-.home-root .feature-compact-card::before,
-.home-root .mp-faq-card::before,
 .home-root .mp-auth-glass-card::before,
 .home-root .mp-explore-list::before,
 .home-root .mp-explore-phone-btn::before,
@@ -19908,14 +19896,9 @@ html[data-theme] .shell .app-topbar::before,
 }
 
 /* Selected / Highlighted Tinted Liquid Glass Surfaces */
-.shell .mp-branch-card.is-active,
-.shell .mp-addon-square-card.is-enabled,
 .shell .mp-appearance-layout-card.selected,
 .shell .mp-appearance-theme-card.selected,
 .shell .mp-appearance-shape-card.selected,
-.shell .mp-he-switch-row.is-featured,
-.shell .mp-set2-channel-card.is-selected,
-.shell .mp-set2-type-card.is-selected,
 .mp-act-preset-btn.is-active,
 .home-root .mp-faq-card.is-open,
 .mp-onboard-step-card.is-selected {
@@ -19928,6 +19911,22 @@ html[data-theme] .shell .app-topbar::before,
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.16),
     0 10px 24px color-mix(in srgb, var(--brand) 16%, transparent) !important;
+}
+
+.shell .mp-branch-card.is-active,
+.shell .mp-addon-square-card.is-enabled,
+.shell .mp-he-switch-row.is-featured,
+.shell .mp-set2-channel-card.is-selected,
+.shell .mp-set2-type-card.is-selected {
+  position: relative;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--brand) 16%, transparent) 0%, color-mix(in srgb, var(--brand) 5%, transparent) 100%) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 1px solid color-mix(in srgb, var(--brand) 48%, var(--mp-glass-border)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 8px 18px color-mix(in srgb, var(--brand) 14%, transparent) !important;
 }
 
 .shell .mp-framed-box {
@@ -20007,12 +20006,7 @@ html[data-theme] .home-root .btn:not(.p):not(.d),
 html[data-theme] .shell .mp-jump-btn,
 .shell .mp-jump-btn,
 .shell .mp-dash-topbar-btn:not(.is-primary),
-.shell .mp-item-icon-btn:not(.is-scheduled),
-.shell .mp-order-icon-btn:not(.is-wa),
-.shell .mp-order-link-pill,
-.shell .mp-order-status-btn,
 .shell .mp-order-modal-status-btn,
-.shell .mp-od-icon-action:not(.is-danger),
 .shell .mp-od-action-btn:not(.is-wa),
 .shell .mp-od-status-btn,
 .mp-status-picker-close,
@@ -20021,36 +20015,24 @@ html[data-theme] .shell .mp-jump-btn,
 .shell .mp-items-cats-arrow,
 .shell .mp-items-cat-tab:not(.is-active),
 .shell .mp-compass-btn:not(.is-active),
-.shell .mp-tbl-btn:not(.is-danger),
-.shell .mp-tab-order-btn,
 .shell .mp-action-tile,
 .shell .mp-custom-color-chip,
-.shell .mp-item-price-btn,
 .shell .mp-set2-channel-card:not(.is-selected),
 .shell .mp-set2-type-card:not(.is-selected),
-.shell .mp-set2-hours-apply-btn,
 .shell .mp-set2-add-zone-btn,
-.shell .mp-set2-zone-del-btn,
-.shell .mp-set2-subzone-add-btn,
 .shell .mp-set2-link-action-btn,
 .shell .mp-sb-branch-trigger,
 .shell .mp-stats-nav-arrow,
-.shell .mp-stats-quick-chip:not(.active),
 .shell .mp-stats-select,
-.shell .mp-addon-btn-edit,
 .shell .mp-addon-utility-btn,
 .shell .mp-addon-enable-switch,
 .shell .mp-addon-check-row,
 .shell .mp-addon-info-note,
 .mp-addon-modal-close,
-.shell .mp-he-icon-btn:not(.is-danger),
 .shell .mp-he-disc-preview,
 .shell .mp-he-row-num,
 .shell .mp-pf-inc-btn.is-off,
 .shell .mp-acc-filter-btn:not(.is-active),
-.shell .mp-acc-do-btn,
-.shell .mp-acc-eye-btn,
-.shell .mp-acc-login-btn,
 .mp-act-head-btn,
 .mp-act-head-close,
 .mp-act-tile-btn,
@@ -20072,10 +20054,40 @@ html[data-theme] .home-root .hamburger-btn {
   box-shadow: var(--mp-glass-control-shadow) !important;
   color: var(--ink) !important;
   transition:
-    background 0.18s ease,
-    border-color 0.18s ease,
-    box-shadow 0.18s ease,
-    transform 0.14s ease;
+    background-color 0.16s ease,
+    border-color 0.16s ease,
+    transform 0.12s ease;
+}
+
+/* High-Frequency Repeating Per-Card / Per-Row Controls (Keep Crisp Translucent Control Style Without Per-Button Blur Layer) */
+.shell .mp-item-icon-btn:not(.is-scheduled),
+.shell .mp-order-icon-btn:not(.is-wa),
+.shell .mp-order-link-pill,
+.shell .mp-order-status-btn,
+.shell .mp-od-icon-action:not(.is-danger),
+.shell .mp-tbl-btn:not(.is-danger),
+.shell .mp-tab-order-btn,
+.shell .mp-item-price-btn,
+.shell .mp-set2-hours-apply-btn,
+.shell .mp-set2-zone-del-btn,
+.shell .mp-set2-subzone-add-btn,
+.shell .mp-stats-quick-chip:not(.active),
+.shell .mp-addon-btn-edit,
+.shell .mp-he-icon-btn:not(.is-danger),
+.shell .mp-acc-do-btn,
+.shell .mp-acc-eye-btn,
+.shell .mp-acc-login-btn {
+  position: relative;
+  background: var(--mp-glass-control) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 1px solid var(--mp-glass-border) !important;
+  box-shadow: var(--mp-glass-control-shadow) !important;
+  color: var(--ink) !important;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.12s ease;
 }
 
 /* Subtle Hairline Danger Crystal Buttons (Logout / Delete — Light & Dark) */

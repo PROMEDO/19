@@ -868,7 +868,12 @@ async function syncFromSupabase(force = false): Promise<void> {
 }
 
 export async function readAll(includeReserved = false): Promise<Record<string, unknown>> {
-  await syncFromSupabase(false);
+  loadStoreFromFile();
+  if (!hasHydratedSupabase && Object.keys(memoryStore).length === 0) {
+    await syncFromSupabase(false);
+  } else if (isSupabaseConfigured()) {
+    void syncFromSupabase(false).catch(() => {});
+  }
   const out: Record<string, unknown> = {};
   for (const [k, v] of Object.entries(memoryStore)) {
     if (!includeReserved && isReservedInternalKey(k)) continue;

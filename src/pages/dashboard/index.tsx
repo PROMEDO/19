@@ -44,6 +44,19 @@ const OrdersPage = lazy(() => import('./OrdersPage').then((m) => ({ default: m.O
 const QrPage = lazy(() => import('./QrPage').then((m) => ({ default: m.QrPage })));
 const SettingsPage = lazy(() => import('./SettingsPage').then((m) => ({ default: m.SettingsPage })));
 
+const TAB_PREFETCHERS: Partial<Record<DashboardTab, () => Promise<unknown>>> = {
+  home: () => import('./HomePage'),
+  cats: () => import('./CategoriesPage'),
+  menu: () => import('./ItemsPage'),
+  orders: () => import('./OrdersPage'),
+  stats: () => import('./StatsPage'),
+  appearance: () => import('./AppearancePage'),
+  branches: () => import('./BranchesPage'),
+  addons: () => import('./AddonsPage'),
+  qr: () => import('./QrPage'),
+  set: () => import('./SettingsPage'),
+};
+
 const TabFallback = () => (
   <div style={{ minHeight: '220px', display: 'grid', placeItems: 'center' }} aria-hidden="true">
     <Loader2 size={24} className="animate-spin" style={{ color: 'var(--brand, #059669)' }} />
@@ -154,6 +167,29 @@ const DashboardShell: React.FC = () => {
   useEffect(() => {
     document.title = `${activeTabTitle} | ${activeBranchDisplayName || 'منيو بلس'}`;
   }, [activeTabTitle, activeBranchDisplayName]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const prefetchRemainingTabs = () => {
+      Object.entries(TAB_PREFETCHERS).forEach(([tabId, loader]) => {
+        if (tabId !== activeTab && loader) {
+          void loader().catch(() => {});
+        }
+      });
+    };
+    const w = window as Window & {
+      requestIdleCallback?: (cb: () => void, opts?: { timeout?: number }) => number;
+      cancelIdleCallback?: (id: number) => void;
+    };
+    if (typeof w.requestIdleCallback === 'function') {
+      const idleId = w.requestIdleCallback(prefetchRemainingTabs, { timeout: 1400 });
+      return () => {
+        w.cancelIdleCallback?.(idleId);
+      };
+    }
+    const timer = window.setTimeout(prefetchRemainingTabs, 450);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   const localizedPlanTitle = resolvedPlan.plan.n;
   const lockedTooltip = 'متاح في الباقات الأعلى';
@@ -326,6 +362,8 @@ const DashboardShell: React.FC = () => {
                       key={tab.id}
                       type="button"
                       className={isActive ? 'on' : ''}
+                      onPointerEnter={() => void TAB_PREFETCHERS[tab.id]?.()}
+                      onFocus={() => void TAB_PREFETCHERS[tab.id]?.()}
                       onClick={() => {
                         setActiveTab(tab.id);
                         setIsItemEditorOpen(false);
@@ -385,6 +423,8 @@ const DashboardShell: React.FC = () => {
                 type="button"
                 className={isActive ? 'on' : ''}
                 style={isLocked ? { opacity: 0.62 } : undefined}
+                onPointerEnter={() => void TAB_PREFETCHERS[tab.id]?.()}
+                onFocus={() => void TAB_PREFETCHERS[tab.id]?.()}
                 onClick={() => {
                   setActiveTab(tab.id);
                   setIsItemEditorOpen(false);

@@ -1275,6 +1275,10 @@ declare global {
       slug?: string;
       records?: StoreData;
     };
+    __MENUPLUS_INITIAL_HOME__?: {
+      version?: number;
+      records?: StoreData;
+    };
   }
 }
 
@@ -1282,6 +1286,11 @@ const LOCAL_STORAGE_KEY = 'menuplus_standalone_db_v1';
 let memoryDb: StoreData | null = null;
 let dbRevision = 0;
 let initialWindowMenuHydrated = false;
+let localPersistTimerId: number | null = null;
+let localPersistListenersAttached = false;
+let lastServerSyncAt = 0;
+let lastStoreVersion = 0;
+let lastHomeBootAt = 0;
 
 export function getDbRevision(): number {
   return dbRevision;
@@ -1290,27 +1299,43 @@ export function getDbRevision(): number {
 function hydrateWindowInitialMenu(base: StoreData): StoreData {
   if (initialWindowMenuHydrated || typeof window === 'undefined') return base;
   initialWindowMenuHydrated = true;
-  const bootRecords = window.__MENUPLUS_INITIAL_MENU__?.records;
-  if (!bootRecords || typeof bootRecords !== 'object') return base;
-  const next: StoreData = { ...base };
-  for (const [k, v] of Object.entries(bootRecords)) {
-    if (!v || typeof v !== 'object' || Array.isArray(v)) {
-      next[k] = v;
-      continue;
-    }
-    const existing = next[k];
-    if (
-      k.startsWith('restaurants/') &&
-      existing &&
-      typeof existing === 'object' &&
-      !Array.isArray(existing)
-    ) {
-      // Preserve cached inline logo/coverImages when bootstrap stripped >16KB data URLs until full fetch resolves
-      next[k] = { ...(existing as StoreData), ...(v as StoreData) };
-    } else {
-      next[k] = v;
-    }
+  const menuRecords = window.__MENUPLUS_INITIAL_MENU__?.records;
+  const homeRecords = window.__MENUPLUS_INITIAL_HOME__?.records;
+  const homeVersion = Number(window.__MENUPLUS_INITIAL_HOME__?.version || 0);
+  if (homeVersion > 0) {
+    lastStoreVersion = homeVersion;
+    lastHomeBootAt = Date.now();
   }
+  if (
+    (!menuRecords || typeof menuRecords !== 'object') &&
+    (!homeRecords || typeof homeRecords !== 'object')
+  ) {
+    return base;
+  }
+  const next: StoreData = { ...base };
+  const mergeBootEntries = (records?: StoreData) => {
+    if (!records || typeof records !== 'object') return;
+    for (const [k, v] of Object.entries(records)) {
+      if (!v || typeof v !== 'object' || Array.isArray(v)) {
+        next[k] = v;
+        continue;
+      }
+      const existing = next[k];
+      if (
+        (k.startsWith('restaurants/') || k.startsWith('items/') || k.startsWith('cats/')) &&
+        existing &&
+        typeof existing === 'object' &&
+        !Array.isArray(existing)
+      ) {
+        // Preserve cached inline logo/coverImages/img when bootstrap stripped >16KB data URLs until full fetch resolves
+        next[k] = { ...(existing as StoreData), ...(v as StoreData) };
+      } else {
+        next[k] = v;
+      }
+    }
+  };
+  mergeBootEntries(homeRecords);
+  mergeBootEntries(menuRecords);
   dbRevision += 1;
   return next;
 }
@@ -1338,16 +1363,46 @@ export function loadStore(): StoreData {
   return memoryDb;
 }
 
-export function saveStore(store: StoreData) {
-  memoryDb = store;
-  dbRevision += 1;
+function flushPendingLocalStorageSave(): void {
+  if (localPersistTimerId !== null && typeof window !== 'undefined') {
+    window.clearTimeout(localPersistTimerId);
+    localPersistTimerId = null;
+  }
+  if (!memoryDb) return;
   try {
     if (typeof localStorage !== 'undefined') {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(store));
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(memoryDb));
     }
   } catch {
     // storage fallback
   }
+}
+
+export function saveStore(store: StoreData) {
+  memoryDb = store;
+  dbRevision += 1;
+  if (typeof window === 'undefined') {
+    flushPendingLocalStorageSave();
+    return;
+  }
+  if (!localPersistListenersAttached) {
+    localPersistListenersAttached = true;
+    const onHideOrUnload = () => flushPendingLocalStorageSave();
+    window.addEventListener('pagehide', onHideOrUnload);
+    window.addEventListener('beforeunload', onHideOrUnload);
+    if (typeof document !== 'undefined') {
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') flushPendingLocalStorageSave();
+      });
+    }
+  }
+  if (localPersistTimerId !== null) {
+    window.clearTimeout(localPersistTimerId);
+  }
+  localPersistTimerId = window.setTimeout(() => {
+    localPersistTimerId = null;
+    flushPendingLocalStorageSave();
+  }, 220);
 }
 
 const recentLocalWriteTs = new Map<string, number>();
@@ -1384,6 +1439,7 @@ const inFlightPopularFetch = new Map<string, Promise<Record<string, number>>>();
 export function invalidateClientCaches(keys?: string[]): void {
   try {
     lastServerSyncAt = 0;
+    lastHomeBootAt = 0;
     loadedMenuVersionByKey.clear();
     loadedMenuFetchedAtByKey.clear();
     lastDashBootAtByRid.clear();
@@ -2277,8 +2333,6 @@ export function migrateBrandInStore(store: StoreData, syncRemote = false): void 
 }
 
 let inFlightSyncPromise: Promise<boolean> | null = null;
-let lastServerSyncAt = 0;
-let lastStoreVersion = 0;
 
 function mergeRemoteRecordsIntoStore(
   remote: StoreData,
@@ -2527,6 +2581,77 @@ export async function fetchPublicMenuFast(
   })();
 
   inFlightMenuFetch.set(cacheKey, task);
+  return task;
+}
+
+let inFlightHomeFetch: Promise<{ ok: boolean; unchanged?: boolean }> | null = null;
+
+export async function fetchPublicHomeFast(opts?: {
+  force?: boolean;
+  onlyIfChanged?: boolean;
+  bypassTtl?: boolean;
+}): Promise<{ ok: boolean; unchanged?: boolean }> {
+  loadStore();
+  if (!opts?.force && !opts?.bypassTtl && !activePushPromise) {
+    if (lastHomeBootAt > 0 && Date.now() - lastHomeBootAt < CLIENT_CACHE_TTL_MS && getSite()?.n) {
+      return { ok: true, unchanged: true };
+    }
+  }
+  if (!opts?.force && inFlightHomeFetch) return inFlightHomeFetch;
+
+  const task = (async (): Promise<{ ok: boolean; unchanged?: boolean }> => {
+    if (typeof fetch === 'undefined') {
+      return { ok: Boolean(getSite()?.n) };
+    }
+    const fetchStartedAt = Date.now();
+    const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    const timeoutId =
+      controller && typeof window !== 'undefined'
+        ? window.setTimeout(() => controller.abort(), 8000)
+        : null;
+    try {
+      const vQuery = opts?.onlyIfChanged && lastStoreVersion > 0 ? `?v=${lastStoreVersion}` : '';
+      const res = await fetch(`/api/public/home-bootstrap${vQuery}`, {
+        cache: 'no-store',
+        credentials: 'include',
+        ...(controller ? { signal: controller.signal } : {}),
+      });
+      if (!res.ok) {
+        return { ok: Boolean(getSite()?.n) };
+      }
+      const data = (await res.json()) as {
+        ok?: boolean;
+        unchanged?: boolean;
+        version?: number;
+        records?: StoreData;
+      };
+      if (data.version && data.version > 0) {
+        lastStoreVersion = data.version;
+      }
+      lastHomeBootAt = Date.now();
+      if (data.unchanged) {
+        return { ok: true, unchanged: true };
+      }
+      if (data.records && typeof data.records === 'object') {
+        mergeRemoteRecordsIntoStore(data.records, fetchStartedAt);
+        ensureDemoRestaurant();
+        applyScopedTheme();
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('menuplus_db_updated'));
+        }
+      }
+      return { ok: true };
+    } catch {
+      return { ok: Boolean(getSite()?.n) };
+    } finally {
+      if (timeoutId !== null && typeof window !== 'undefined') {
+        window.clearTimeout(timeoutId);
+      }
+      inFlightHomeFetch = null;
+    }
+  })();
+
+  inFlightHomeFetch = task;
   return task;
 }
 
@@ -4511,8 +4636,12 @@ export async function ensureOwnerAdminAccount() {
 }
 
 // Initial Data Seeding
-export async function seedInitialData() {
-  await Promise.all([syncFromServer(), syncSessionFromServer()]);
+export async function seedInitialData(opts?: { skipSession?: boolean }) {
+  if (opts?.skipSession) {
+    await syncFromServer();
+  } else {
+    await Promise.all([syncFromServer(), syncSessionFromServer()]);
+  }
   const store = loadStore();
   ensureDemoRestaurant();
   await ensureOwnerAdminAccount();

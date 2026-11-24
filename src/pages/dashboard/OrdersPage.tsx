@@ -760,7 +760,7 @@ export const OrdersPage: React.FC = () => {
 
                     {Number(selectedOrder.dineInDiscount || 0) > 0 && (
                       <div className="mp-od-total-row is-discount">
-                        <span>{selectedOrder.dineInDiscountLabel || 'خصم طلبات الصالة'}</span>
+                        <span>{selectedOrder.dineInDiscountLabel || 'خصم على طلبات الصالة'}</span>
                         <span className="tabular-nums">-{formatNumber(Number(selectedOrder.dineInDiscount || 0))} {currency}</span>
                       </div>
                     )}

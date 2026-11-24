@@ -49,10 +49,10 @@ export const MOTION_PRESETS: MotionPresetDefinition[] = [
     arabicLabel: 'انزلاق حريري متدرج',
     category: 'slide',
     curveLabel: 'cubic-bezier(0.22, 1, 0.36, 1)',
-    baseDuration: 0.72,
-    initial: { opacity: 0, x: -20, scale: 0.982 },
+    baseDuration: 0.34,
+    initial: { opacity: 0, x: -12, scale: 0.99 },
     animate: { opacity: 1, x: 0, scale: 1 },
-    exit: { opacity: 0, x: 14, scale: 0.986 },
+    exit: { opacity: 0, x: 10, scale: 0.99 },
     ease: [0.22, 1, 0.36, 1],
   },
   {
@@ -749,41 +749,39 @@ function deriveShapeKeyframes(
     }
 
     case 'card': {
-      const cardInit: Record<string, any> = { ...baseInit };
+      const cardInit: Record<string, any> = { ...stripBlur(baseInit) };
       if (preset.category === 'slide' || preset.category === 'fade') {
-        cardInit.y = typeof baseInit.y === 'number' ? baseInit.y * 0.9 + 10 : 18;
-        cardInit.x = (num('x') * 0.45) + (idx % 3 === 0 ? -10 : idx % 3 === 2 ? 10 : 0);
-        cardInit.scale = typeof baseInit.scale === 'number' ? baseInit.scale : 0.968;
+        cardInit.y = typeof baseInit.y === 'number' ? baseInit.y * 0.6 + 8 : 10;
+        cardInit.x = (num('x') * 0.3) + (idx % 3 === 0 ? -6 : idx % 3 === 2 ? 6 : 0);
+        cardInit.scale = typeof baseInit.scale === 'number' ? Math.max(baseInit.scale, 0.975) : 0.98;
       } else if (preset.category === 'tilt_3d') {
-        cardInit.rotateY = (num('rotateY', 18) || 16) * xSign * 0.7;
-        cardInit.y = 14;
+        cardInit.rotateY = (num('rotateY', 18) || 16) * xSign * 0.55;
+        cardInit.y = 10;
       } else if (preset.category === 'zoom' || preset.category === 'spring') {
-        cardInit.scale = typeof baseInit.scale === 'number' ? Math.min(baseInit.scale, 0.91) : 0.91;
-        cardInit.y = 14;
+        cardInit.scale = typeof baseInit.scale === 'number' ? Math.max(baseInit.scale, 0.94) : 0.94;
+        cardInit.y = 10;
       } else {
-        cardInit.y = typeof baseInit.y === 'number' ? baseInit.y * 0.85 : 14;
-        cardInit.scale = typeof baseInit.scale === 'number' ? baseInit.scale : 0.96;
+        cardInit.y = typeof baseInit.y === 'number' ? baseInit.y * 0.65 : 10;
+        cardInit.scale = typeof baseInit.scale === 'number' ? Math.max(baseInit.scale, 0.97) : 0.975;
       }
       return {
         initial: cardInit,
-        animate: { ...baseAnim, x: 0, y: 0, scale: 1, rotateX: 0, rotateY: 0 },
-        exit: baseExit,
-        durationScale: 0.92,
+        animate: { ...stripBlur(baseAnim), x: 0, y: 0, scale: 1, rotateX: 0, rotateY: 0 },
+        exit: stripBlur(baseExit),
+        durationScale: 0.72,
         withHoverTap: true,
-        hoverPreset: { y: -4, scale: 1.014 },
-        tapPreset: { scale: 0.982 },
+        hoverPreset: { y: -2, scale: 1.008 },
+        tapPreset: { scale: 0.985 },
       };
     }
 
     case 'tile': {
       const tileInit: Record<string, any> = {
         opacity: 0,
-        scale: preset.category === 'spring' || preset.category === 'zoom' ? 0.86 : 0.93,
-        y: 12,
-        x: num('x') * 0.35,
+        scale: preset.category === 'spring' || preset.category === 'zoom' ? 0.92 : 0.96,
+        y: 8,
+        x: num('x') * 0.25,
       };
-      const hasBlur = preset.category === 'blur';
-      if (hasBlur) tileInit.filter = 'blur(5px)';
       return {
         initial: tileInit,
         animate: {
@@ -792,13 +790,12 @@ function deriveShapeKeyframes(
           scale: 1,
           x: 0,
           y: 0,
-          ...(hasBlur ? { filter: 'blur(0px)' } : {}),
         },
-        exit: baseExit,
-        durationScale: 0.78,
+        exit: stripBlur(baseExit),
+        durationScale: 0.65,
         withHoverTap: true,
-        hoverPreset: { y: -2, scale: 1.024 },
-        tapPreset: { scale: 0.97 },
+        hoverPreset: { y: -2, scale: 1.015 },
+        tapPreset: { scale: 0.975 },
       };
     }
 
@@ -806,15 +803,11 @@ function deriveShapeKeyframes(
       const baseX = num('x');
       const rowInit: Record<string, any> = {
         opacity: 0,
-        x: baseX ? baseX * 0.85 : isOdd ? 14 : 22,
-        y: preset.category === 'zoom' || preset.category === 'spring' ? 10 : 6,
+        x: baseX ? baseX * 0.5 : isOdd ? 8 : 12,
+        y: preset.category === 'zoom' || preset.category === 'spring' ? 8 : 4,
       };
       if (preset.category === 'zoom' || preset.category === 'spring') {
-        rowInit.scale = 0.97;
-      }
-      const hasBlur = preset.category === 'blur';
-      if (hasBlur) {
-        rowInit.filter = 'blur(4px)';
+        rowInit.scale = 0.98;
       }
       return {
         initial: rowInit,
@@ -824,12 +817,11 @@ function deriveShapeKeyframes(
           x: 0,
           y: 0,
           scale: 1,
-          ...(hasBlur ? { filter: 'blur(0px)' } : {}),
         },
-        exit: baseExit,
-        durationScale: 0.82,
+        exit: stripBlur(baseExit),
+        durationScale: 0.65,
         withHoverTap: true,
-        hoverPreset: { x: -3, scale: 1.005 },
+        hoverPreset: { x: -2, scale: 1.003 },
         tapPreset: { scale: 0.99 },
       };
     }
@@ -1022,13 +1014,13 @@ export function dashShapeMotion(
     typeof opts?.delay === 'number'
       ? opts.delay
       : shape === 'card'
-      ? Math.min((opts?.baseDelay ?? 0.06) + idx * 0.065, 0.42)
+      ? Math.min((opts?.baseDelay ?? 0.02) + idx * 0.018, 0.12)
       : shape === 'row'
-      ? Math.min(idx * 0.055, 0.36)
+      ? Math.min(idx * 0.015, 0.09)
       : shape === 'tile'
-      ? Math.min(idx * 0.045, 0.3)
+      ? Math.min(idx * 0.014, 0.09)
       : shape === 'pill'
-      ? Math.min(idx * 0.035, 0.24)
+      ? Math.min(idx * 0.012, 0.07)
       : 0;
 
   return buildMotionPropsForPreset(preset, speed, {
@@ -1059,7 +1051,7 @@ export function dashCardMotion(
   idx = 0,
   targetOpacity = 1,
   useInView = false,
-  baseDelay = 0.06
+  baseDelay = 0.02
 ) {
   return dashShapeMotion('card', reduced, {
     idx,
@@ -1074,7 +1066,7 @@ export function dashTileMotion(reduced: boolean | null, idx = 0, useInView = fal
   return dashShapeMotion('tile', reduced, { idx, useInView, withHoverTap: true });
 }
 
-export function dashRowMotion(reduced: boolean | null, idx = 0, useInView = true) {
+export function dashRowMotion(reduced: boolean | null, idx = 0, useInView = false) {
   return dashShapeMotion('row', reduced, { idx, useInView });
 }
 

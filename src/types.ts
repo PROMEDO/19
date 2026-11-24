@@ -569,6 +569,7 @@ export interface RestaurantAddons {
     minOrderAmount?: number;
     maxDiscountAmount?: number;
   };
+  /** @deprecated Migrated to Restaurant.mapUrl / Restaurant.wazeUrl in Settings */
   locationLinks?: {
     configured?: boolean;
     enabled?: boolean;
@@ -621,6 +622,7 @@ export interface Restaurant {
   aboutText?: string;
   aboutImage?: string;
   mapUrl?: string;
+  wazeUrl?: string;
   googleReviewUrl?: string;
   acceptOrdersWhenClosed?: boolean;
   weeklyHours?: Partial<Record<WorkDayKey, DaySchedule>>;

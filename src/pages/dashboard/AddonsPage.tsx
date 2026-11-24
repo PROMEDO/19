@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, useReducedMotion } from 'motion/react';
 import {
@@ -100,6 +100,8 @@ export const AddonsPage: React.FC = () => {
   const [loyaltySearchQuery, setLoyaltySearchQuery] = useState('');
   const [loyaltyBusyId, setLoyaltyBusyId] = useState<string | null>(null);
   const [loyaltyRev, setLoyaltyRev] = useState(0);
+  const addonModalOverlayRef = useRef<HTMLDivElement | null>(null);
+  const previewModalOverlayRef = useRef<HTMLDivElement | null>(null);
   const {
     rid,
     rest,
@@ -262,9 +264,30 @@ export const AddonsPage: React.FC = () => {
       }
     };
     window.addEventListener('keydown', onKeyDown);
+
+    const syncVisualViewport = () => {
+      const vv = window.visualViewport;
+      const h = Math.max(260, Math.round(vv?.height || window.innerHeight || 0));
+      const top = Math.max(0, Math.round(vv?.offsetTop || 0));
+      [addonModalOverlayRef.current, previewModalOverlayRef.current].forEach((el) => {
+        if (!el) return;
+        el.style.setProperty('--mp-vv-height', `${h}px`);
+        el.style.setProperty('--mp-vv-offset-top', `${top}px`);
+      });
+    };
+
+    syncVisualViewport();
+    const vv = window.visualViewport;
+    vv?.addEventListener('resize', syncVisualViewport);
+    vv?.addEventListener('scroll', syncVisualViewport);
+    window.addEventListener('resize', syncVisualViewport);
+
     return () => {
       document.body.style.overflow = prevOverflow;
       window.removeEventListener('keydown', onKeyDown);
+      vv?.removeEventListener('resize', syncVisualViewport);
+      vv?.removeEventListener('scroll', syncVisualViewport);
+      window.removeEventListener('resize', syncVisualViewport);
     };
   }, [isAnyAddonModalOpen, showPopupPreview, showOfferMediaLibrary, editingAddonKey]);
 
@@ -357,11 +380,6 @@ export const AddonsPage: React.FC = () => {
                         : ''}
                     </div>
                   )}
-                {addon.key === 'locationLinks' && (Boolean(cfg.googleMapsUrl) || Boolean(cfg.wazeUrl)) && (
-                  <div className="mp-addon-card-meta" style={{ color: isEnabled ? 'var(--brand)' : 'var(--muted)' }}>
-                    {[cfg.googleMapsUrl ? 'كوكل ماب' : '', cfg.wazeUrl ? 'ويز' : ''].filter(Boolean).join(' · ')}
-                  </div>
-                )}
                 {addon.key === 'minOrder' && (
                   <div className="mp-addon-card-meta tabular-nums" style={{ color: isEnabled ? 'var(--brand)' : 'var(--muted)' }}>
                     الحد الأدنى: {formatNumber(Number(cfg.amount ?? 10000))} {currency}
@@ -416,7 +434,12 @@ export const AddonsPage: React.FC = () => {
       {/* FIXED CENTERED EDIT / SETUP ADDON POPUP MODAL (PORTALED) */}
       {editingAddonKey && activeMeta && typeof document !== 'undefined' &&
         createPortal(
-          <div className="mp-addon-modal-overlay" dir="rtl" onClick={closeEditModal}>
+          <div
+            ref={addonModalOverlayRef}
+            className="mp-addon-modal-overlay"
+            dir="rtl"
+            onClick={closeEditModal}
+          >
             <motion.div
               className="mp-addon-modal-card"
               role="dialog"
@@ -447,7 +470,16 @@ export const AddonsPage: React.FC = () => {
               </div>
 
               {/* Scrollable Body */}
-              <div className="mp-addon-modal-body">
+              <div
+                className="mp-addon-modal-body"
+                onFocusCapture={(e) => {
+                  const target = e.target as HTMLElement | null;
+                  if (!target || typeof target.scrollIntoView !== 'function') return;
+                  window.setTimeout(() => {
+                    target.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+                  }, 120);
+                }}
+              >
                 {requiresInitialSetup ? (
                   <div className="mp-addon-setup-banner">
                     <Sparkles size={16} style={{ flexShrink: 0, marginTop: '2px' }} />
@@ -1820,12 +1852,12 @@ export const AddonsPage: React.FC = () => {
                 {editingAddonKey === 'dineInDiscount' && (
                   <>
                     <label className="f">
-                      {terms.isStore ? 'عنوان خصم الطلب داخل المعرض' : 'عنوان خصم طلبات الصالة'}
+                      {terms.isStore ? 'عنوان خصم الطلب داخل المعرض' : 'عنوان البطاقة للزبون'}
                       <input
                         type="text"
                         value={addonDraft.title || ''}
                         onChange={(e) => updateDraft((p) => ({ ...p, title: e.target.value }))}
-                        placeholder={terms.isStore ? 'خصم خاص للطلبات داخل المعرض' : 'خصم خاص لطلبات الصالة'}
+                        placeholder={terms.isStore ? 'خصم خاص للطلبات داخل المعرض' : 'خصم على طلبات الصالة'}
                         className="mp-addon-modal-input"
                       />
                     </label>
@@ -1876,51 +1908,7 @@ export const AddonsPage: React.FC = () => {
                     </div>
                     <div className="mp-addon-info-note">
                       <div>
-                        تظهر هذه الميزة كبطاقة تفاعلية أعلى المنيو مثل بطاقة النقاط والخصومات، وعند اختيار الطلب داخل الصالة يُطبق الخصم تلقائياً في السلة.
-                      </div>
-                    </div>
-                  </>
-                )}
-
-                {editingAddonKey === 'locationLinks' && (
-                  <>
-                    <label className="f">
-                      عنوان البطاقة في المنيو
-                      <input
-                        type="text"
-                        value={addonDraft.title || ''}
-                        onChange={(e) => updateDraft((p) => ({ ...p, title: e.target.value }))}
-                        placeholder={terms.isStore ? 'موقع المتجر' : 'موقع المطعم'}
-                        className="mp-addon-modal-input"
-                      />
-                    </label>
-                    <label className="f">
-                      رابط الموقع على خرائط كوكل (Google Maps)
-                      <input
-                        type="url"
-                        dir="ltr"
-                        value={addonDraft.googleMapsUrl || ''}
-                        onChange={(e) => updateDraft((p) => ({ ...p, googleMapsUrl: e.target.value }))}
-                        placeholder="https://maps.app.goo.gl/..."
-                        className="mp-addon-modal-input"
-                        style={{ textAlign: 'left' }}
-                      />
-                    </label>
-                    <label className="f">
-                      رابط الموقع على ويز (Waze)
-                      <input
-                        type="url"
-                        dir="ltr"
-                        value={addonDraft.wazeUrl || ''}
-                        onChange={(e) => updateDraft((p) => ({ ...p, wazeUrl: e.target.value }))}
-                        placeholder="https://waze.com/ul?ll=..."
-                        className="mp-addon-modal-input"
-                        style={{ textAlign: 'left' }}
-                      />
-                    </label>
-                    <div className="mp-addon-info-note">
-                      <div>
-                        ستظهر بطاقة بسيطة في المنيو تضم زرين مباشرين للزبون (زر خرائط كوكل وزر ويز) لفتح الموقع بضغطة واحدة.
+                        تظهر هذه الميزة كبطاقة تفاعلية أعلى المنيو مثل بطاقة النقاط والخصومات، وعند الضغط عليها تظهر تفاصيل الخصم مع زرّي موقع المطعم على خرائط كوكل وويز (من قسم الإعدادات ← الروابط).
                       </div>
                     </div>
                   </>
@@ -1978,6 +1966,7 @@ export const AddonsPage: React.FC = () => {
 
         return createPortal(
           <div
+            ref={previewModalOverlayRef}
             className="mp-addon-modal-overlay"
             dir="rtl"
             style={{ zIndex: 100120 }}

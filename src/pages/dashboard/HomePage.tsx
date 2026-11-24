@@ -51,7 +51,7 @@ export const HomePage: React.FC = () => {
   const hasCustomBanner = Boolean(rest.coverImages?.[0] && rest.coverImages[0] !== defaultMedia.banner);
   const hasRichBio = Boolean(rest.aboutText && rest.aboutText.trim().length >= 35);
   const hasSocialLinks = Boolean(
-    rest.social?.instagram || rest.social?.tiktok || rest.social?.facebook || rest.mapUrl
+    rest.social?.instagram || rest.social?.tiktok || rest.social?.facebook || rest.mapUrl || rest.wazeUrl
   );
   const hasCustomSlugConfigured = Boolean(rest.slug || rest.subdomain);
   const itemsWithPhotoCount = allItems.filter((item) => Boolean(item.img && item.img.trim())).length;
@@ -88,7 +88,9 @@ export const HomePage: React.FC = () => {
       (rest.telegramChatId && String(rest.telegramChatId).trim()) ||
       (rest.telegramPhone && String(rest.telegramPhone).trim() && rest.telegramUnlinkedManually !== true)
   );
-  const hasMapLocation = Boolean(rest.mapUrl && rest.mapUrl.trim());
+  const hasMapLocation = Boolean(
+    (rest.mapUrl && rest.mapUrl.trim()) || (rest.wazeUrl && rest.wazeUrl.trim())
+  );
 
   interface MenuTip {
     id: string;

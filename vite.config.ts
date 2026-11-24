@@ -40,6 +40,31 @@ export default defineConfig(() => {
       emptyOutDir: true,
       sourcemap: false,
       cssMinify: 'esbuild' as const,
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            const norm = id.replace(/\\/g, '/');
+            if (!norm.includes('/node_modules/')) return undefined;
+            if (
+              norm.includes('/node_modules/react/') ||
+              norm.includes('/node_modules/react-dom/') ||
+              norm.includes('/node_modules/scheduler/')
+            ) {
+              return 'react-vendor';
+            }
+            if (norm.includes('/node_modules/motion/') || norm.includes('/node_modules/framer-motion/')) {
+              return 'motion-vendor';
+            }
+            if (norm.includes('/node_modules/lucide-react/')) {
+              return 'lucide-icons';
+            }
+            if (norm.includes('/node_modules/qrcode/')) {
+              return 'qrcode-vendor';
+            }
+            return undefined;
+          },
+        },
+      },
     },
     server: {
       allowedHosts: true as const,

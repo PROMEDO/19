@@ -369,7 +369,13 @@ function resolvePublicMenuFamily(
     } else if (k.startsWith('cats/') || k.startsWith('items/')) {
       const rec = v as Record<string, unknown>;
       if (familyRids.has(String(rec.rid || '').trim())) {
-        records[k] = sanitizeRecordSecrets(rec);
+        const clean = sanitizeRecordSecrets(rec) as Record<string, unknown>;
+        records[k] = clean;
+        const lite: Record<string, unknown> = { ...clean };
+        if (typeof lite.img === 'string' && lite.img.startsWith('data:') && lite.img.length > 16000) {
+          delete lite.img;
+        }
+        bootstrapRecords[k] = lite;
       }
     }
   }
@@ -387,6 +393,56 @@ function resolvePublicMenuFamily(
     records,
     bootstrapRecords,
   };
+}
+
+function resolvePublicHomeRecords(allData: Record<string, unknown>): Record<string, unknown> {
+  const records: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(allData)) {
+    if (
+      k === 'settings/site' ||
+      k === 'settings/home' ||
+      k === 'settings/plans' ||
+      k === 'settings/theme' ||
+      k === 'initialized_v6' ||
+      k.startsWith('migrations/')
+    ) {
+      records[k] = sanitizeRecordSecrets(v);
+    } else if (k === 'restaurants/demo' && v && typeof v === 'object') {
+      const clean = sanitizeRecordSecrets(v) as Record<string, unknown>;
+      const lite: Record<string, unknown> = { ...clean };
+      if (typeof lite.logo === 'string' && lite.logo.startsWith('data:') && lite.logo.length > 16000) {
+        delete lite.logo;
+      }
+      if (Array.isArray(lite.coverImages)) {
+        const hasLargeDataCover = lite.coverImages.some(
+          (img) => typeof img === 'string' && img.startsWith('data:') && img.length > 16000
+        );
+        if (hasLargeDataCover) delete lite.coverImages;
+      }
+      records[k] = lite;
+    }
+  }
+  return records;
+}
+
+function injectInitialHomeBootstrapIntoHtml(
+  html: string,
+  allData: Record<string, unknown>
+): string {
+  const records = resolvePublicHomeRecords(allData);
+  if (Object.keys(records).length === 0) return html;
+  const payload = JSON.stringify({
+    version: getStoreVersion(),
+    records,
+  })
+    .replace(/</g, '\\u003c')
+    .replace(/\u2028/g, '\\u2028')
+    .replace(/\u2029/g, '\\u2029');
+  const tag = `<script>window.__MENUPLUS_INITIAL_HOME__=${payload};</script>`;
+  if (html.includes('</head>')) {
+    return html.replace('</head>', () => `  ${tag}\n  </head>`);
+  }
+  return `${tag}${html}`;
 }
 
 function injectInitialMenuBootstrapIntoHtml(
@@ -1246,6 +1302,29 @@ app.get('/api/public/menu/:slugOrId', async (req, res) => {
       mainRid: family.mainRid,
       slug: family.slug,
       records: family.records,
+    });
+  } catch (err: any) {
+    return res.status(500).json({ ok: false, error: err?.message || 'Database error' });
+  }
+});
+
+// Fast lightweight payload for landing home & auth pages (avoids downloading all restaurants/cats/items/orders)
+app.get('/api/public/home-bootstrap', async (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
+  try {
+    const currentVersion = getStoreVersion();
+    res.setHeader('X-Store-Version', String(currentVersion));
+    const requestedVersion = Number(req.query.v || 0);
+    if (Number.isFinite(requestedVersion) && requestedVersion > 0 && requestedVersion === currentVersion) {
+      return res.json({ ok: true, unchanged: true, version: currentVersion });
+    }
+    const allData = await readAll(false);
+    res.setHeader('X-App-Build', SERVER_BUILD_ID);
+    return res.json({
+      ok: true,
+      version: currentVersion,
+      buildId: SERVER_BUILD_ID,
+      records: resolvePublicHomeRecords(allData),
     });
   } catch (err: any) {
     return res.status(500).json({ ok: false, error: err?.message || 'Database error' });
@@ -3463,6 +3542,8 @@ async function injectSeoMetaIntoHtml(html: string, req: Request): Promise<string
     }
     if (matchedFamily) {
       out = injectInitialMenuBootstrapIntoHtml(out, matchedFamily);
+    } else if (!isAnyDashRoute && !cleanPath.startsWith('/admin') && !cleanPath.startsWith('/onboard')) {
+      out = injectInitialHomeBootstrapIntoHtml(out, allData);
     }
 
     if (isAnyDashRoute) {
@@ -4397,6 +4478,7 @@ async function startServer() {
     } else {
       console.warn('[Database] DATABASE_URL is not set.');
     }
+    void readAll(false).catch(() => {});
     startTelegramBotPolling().catch((err) => {
       console.warn('[Telegram Bot] Failed to start polling:', err);
     });

@@ -11,6 +11,7 @@ import {
   applyScopedTheme,
   fetchAuthMe,
   fetchDashboardBootstrapFast,
+  fetchPublicHomeFast,
   fetchPublicMenuFast,
   getHome,
   getItem,
@@ -360,8 +361,8 @@ export default function App() {
       if (parsed.page === 'home' && parsed.scrollSection) {
         const sectionId = parsed.scrollSection;
         if (!options.isInitial) {
-          void syncFromServer().then((ok) => {
-            if (ok && mountedRef.current) refreshData();
+          void fetchPublicHomeFast({ onlyIfChanged: true }).then((r) => {
+            if (r.ok && !r.unchanged && mountedRef.current) refreshData();
           });
         }
         setTimeout(() => {
@@ -382,6 +383,14 @@ export default function App() {
             rid: parsed.branchId,
             onlyIfChanged: true,
           }).then((r) => {
+            if (r.ok && !r.unchanged && mountedRef.current) refreshData();
+          });
+        } else if (
+          parsed.page === 'home' ||
+          parsed.page === 'login' ||
+          parsed.page === 'forgot'
+        ) {
+          void fetchPublicHomeFast({ onlyIfChanged: true }).then((r) => {
             if (r.ok && !r.unchanged && mountedRef.current) refreshData();
           });
         } else {
@@ -425,7 +434,7 @@ export default function App() {
           fetchAuthMe().catch(() => null),
         ]);
         if (!menuRes.ok) {
-          await seedInitialData().catch(() => {});
+          await seedInitialData({ skipSession: true }).catch(() => {});
         }
         return;
       }
@@ -452,14 +461,30 @@ export default function App() {
             await switchMenuWithServer({ rid: bootRes.targetRid, slug: initParsed.menuSlug }).catch(() => null);
           }
         } else if (!bootRes.ok && !bootRes.unauthorized) {
-          await seedInitialData().catch(() => {});
+          await seedInitialData({ skipSession: true }).catch(() => {});
+        }
+        return;
+      }
+
+      if (
+        initParsed.page === 'home' ||
+        initParsed.page === 'login' ||
+        initParsed.page === 'signup' ||
+        initParsed.page === 'forgot'
+      ) {
+        const [, homeRes] = await Promise.all([
+          fetchAuthMe().catch(() => null),
+          fetchPublicHomeFast().catch(() => ({ ok: false })),
+        ]);
+        if (!homeRes.ok || !getSite()?.n) {
+          await seedInitialData({ skipSession: true }).catch(() => {});
         }
         return;
       }
 
       await Promise.all([
         fetchAuthMe().catch(() => null),
-        seedInitialData().catch(() => {}),
+        seedInitialData({ skipSession: true }).catch(() => {}),
       ]);
     };
 
@@ -723,6 +748,15 @@ export default function App() {
             rid: parsed.branchId,
             onlyIfChanged: true,
           }).then((r) => {
+            if (r.ok && !r.unchanged && mountedRef.current) refreshData();
+          });
+        } else if (
+          parsed.page === 'home' ||
+          parsed.page === 'login' ||
+          parsed.page === 'signup' ||
+          parsed.page === 'forgot'
+        ) {
+          void fetchPublicHomeFast({ onlyIfChanged: true }).then((r) => {
             if (r.ok && !r.unchanged && mountedRef.current) refreshData();
           });
         } else {

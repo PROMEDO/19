@@ -1388,7 +1388,12 @@ function useDashboardController({
   const [restWa, setRestWa] = useState(rest.social?.whatsapp || rest.ph || '');
   const [restAddress, setRestAddress] = useState(rest.address || 'العراق، بغداد');
   const [restInstagram, setRestInstagram] = useState(rest.social?.instagram || '');
-  const [restMapUrl, setRestMapUrl] = useState(rest.mapUrl || '');
+  const [restMapUrl, setRestMapUrl] = useState(
+    rest.mapUrl || rest.addons?.locationLinks?.googleMapsUrl || ''
+  );
+  const [restWazeUrl, setRestWazeUrl] = useState(
+    rest.wazeUrl || rest.addons?.locationLinks?.wazeUrl || ''
+  );
   const [restGoogleReviewUrl, setRestGoogleReviewUrl] = useState(rest.googleReviewUrl || '');
   const [restFacebook, setRestFacebook] = useState(rest.social?.facebook || '');
   const [restTiktok, setRestTiktok] = useState(rest.social?.tiktok || '');
@@ -1452,6 +1457,7 @@ function useDashboardController({
     wa: string;
     address: string;
     mapUrl: string;
+    wazeUrl: string;
     googleReviewUrl: string;
     instagram: string;
     facebook: string;
@@ -1470,7 +1476,7 @@ function useDashboardController({
     `${targetRid}|${Number(rObj.freeDeliveryMin || 0)}|${JSON.stringify(rObj.addons || {})}|${JSON.stringify(rObj.offerPopup || {})}`;
 
   const buildRestSignature = (rObj: Restaurant, targetRid: string) =>
-    `${targetRid}|${rObj.planId || ''}|${rObj.slug || ''}|${rObj.lay || ''}|${rObj.themeMode || ''}|${rObj.dashboardThemeMode || ''}|${rObj.themePreset || ''}|${rObj.themeShape || ''}|${rObj.color || ''}|${rObj.bgColor || ''}|${rObj.currency || ''}|${rObj.logo || ''}|${rObj.coverImages?.[0] || ''}|${rObj.n || ''}|${rObj.orderChannel || ''}|${rObj.telegramNotificationsEnabled === false ? '0' : '1'}|${rObj.a === 0 ? '0' : '1'}|${rObj.viewOnlyMode ? '1' : '0'}|${JSON.stringify(rObj.enabledOrderTypes || {})}|${rObj.acceptOrdersWhenClosed ? '1' : '0'}|${rObj.address || ''}|${rObj.ph || ''}`;
+    `${targetRid}|${rObj.planId || ''}|${rObj.slug || ''}|${rObj.lay || ''}|${rObj.themeMode || ''}|${rObj.dashboardThemeMode || ''}|${rObj.themePreset || ''}|${rObj.themeShape || ''}|${rObj.color || ''}|${rObj.bgColor || ''}|${rObj.currency || ''}|${rObj.logo || ''}|${rObj.coverImages?.[0] || ''}|${rObj.n || ''}|${rObj.orderChannel || ''}|${rObj.telegramNotificationsEnabled === false ? '0' : '1'}|${rObj.a === 0 ? '0' : '1'}|${rObj.viewOnlyMode ? '1' : '0'}|${JSON.stringify(rObj.enabledOrderTypes || {})}|${rObj.acceptOrdersWhenClosed ? '1' : '0'}|${rObj.address || ''}|${rObj.ph || ''}|${rObj.mapUrl || ''}|${rObj.wazeUrl || ''}`;
 
   // Synchronize dashboard form state when switching branch or syncing remote DB
   const syncedRestRef = useRef<string>('');
@@ -1556,7 +1562,8 @@ function useDashboardController({
     const nextWa = rest.social?.whatsapp || rest.ph || '';
     const nextAddr = rest.address || 'العراق، بغداد';
     const nextIg = rest.social?.instagram || '';
-    const nextMap = rest.mapUrl || '';
+    const nextMap = rest.mapUrl || rest.addons?.locationLinks?.googleMapsUrl || '';
+    const nextWaze = rest.wazeUrl || rest.addons?.locationLinks?.wazeUrl || '';
     const nextReview = rest.googleReviewUrl || '';
     const nextFb = rest.social?.facebook || '';
     const nextTt = rest.social?.tiktok || '';
@@ -1584,6 +1591,7 @@ function useDashboardController({
       wa: nextWa,
       address: nextAddr,
       mapUrl: nextMap,
+      wazeUrl: nextWaze,
       googleReviewUrl: nextReview,
       instagram: nextIg,
       facebook: nextFb,
@@ -1621,6 +1629,7 @@ function useDashboardController({
     setRestAddress(nextAddr);
     setRestInstagram(nextIg);
     setRestMapUrl(nextMap);
+    setRestWazeUrl(nextWaze);
     setRestGoogleReviewUrl(nextReview);
     setRestFacebook(nextFb);
     setRestTiktok(nextTt);
@@ -2012,30 +2021,11 @@ function useDashboardController({
     if (keySnapshot === 'dineInDiscount') {
       const pct = Math.min(90, Math.max(1, Number(draftSnapshot.discountPercent ?? 10) || 10));
       draftSnapshot.title = String(
-        draftSnapshot.title || (terms.isStore ? 'خصم خاص للطلبات داخل المعرض' : 'خصم خاص لطلبات الصالة')
+        draftSnapshot.title || (terms.isStore ? 'خصم خاص للطلبات داخل المعرض' : 'خصم على طلبات الصالة')
       ).trim();
       draftSnapshot.discountPercent = pct;
       draftSnapshot.minOrderAmount = Math.max(0, Number(draftSnapshot.minOrderAmount ?? 0) || 0);
       draftSnapshot.maxDiscountAmount = Math.max(0, Number(draftSnapshot.maxDiscountAmount ?? 0) || 0);
-    }
-
-    if (keySnapshot === 'locationLinks') {
-      const normalizeMapLink = (rawVal: unknown): string => {
-        const trimmed = String(rawVal || '').trim();
-        if (!trimmed) return '';
-        if (/^(javascript|data|vbscript):/i.test(trimmed)) return '';
-        return /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
-      };
-      const googleMapsUrl = normalizeMapLink(draftSnapshot.googleMapsUrl);
-      const wazeUrl = normalizeMapLink(draftSnapshot.wazeUrl);
-      if (shouldEnable && !googleMapsUrl && !wazeUrl) {
-        return { ok: false, error: 'يرجى إدخال رابط موقع خرائط كوكل أو رابط ويز على الأقل.' };
-      }
-      draftSnapshot.title = String(
-        draftSnapshot.title || (terms.isStore ? 'موقع المتجر' : 'موقع المطعم')
-      ).trim();
-      draftSnapshot.googleMapsUrl = googleMapsUrl;
-      draftSnapshot.wazeUrl = wazeUrl;
     }
 
     return { ok: true, draftSnapshot };
@@ -3461,6 +3451,7 @@ function useDashboardController({
       ph: restPhone.trim() || latestRest.ph,
       address: restAddress.trim(),
       mapUrl: restMapUrl.trim(),
+      wazeUrl: restWazeUrl.trim(),
       googleReviewUrl: restGoogleReviewUrl.trim(),
       logo: logoUrlInput.trim() || undefined,
       coverImages: coverUrlInput.trim() ? [coverUrlInput.trim()] : [],
@@ -3516,6 +3507,7 @@ function useDashboardController({
     wa: restWa,
     address: restAddress,
     mapUrl: restMapUrl,
+    wazeUrl: restWazeUrl,
     googleReviewUrl: restGoogleReviewUrl,
     instagram: restInstagram,
     facebook: restFacebook,
@@ -4113,6 +4105,8 @@ function useDashboardController({
     setRestInstagram,
     restMapUrl,
     setRestMapUrl,
+    restWazeUrl,
+    setRestWazeUrl,
     restGoogleReviewUrl,
     setRestGoogleReviewUrl,
     restFacebook,

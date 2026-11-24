@@ -4,7 +4,7 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 import {
   Award,
   BarChart3,
@@ -928,7 +928,7 @@ export const StatsPage: React.FC = () => {
             </div>
           </motion.div>
 
-          <AnimatePresence mode="wait">
+          <>
             <motion.div
               key={`${period}-${selectedDay}-${weekOffset}-${selectedMonth}-${allScope}`}
               {...dashSubTabMotion(prefersReducedMotion)}
@@ -1604,7 +1604,7 @@ export const StatsPage: React.FC = () => {
                 </div>
               </div>
             </motion.div>
-          </AnimatePresence>
+          </>
         </>
       )}
     </div>
