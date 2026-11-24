@@ -120,6 +120,7 @@ export interface EstoreStorefrontProps {
     name: string,
     phone: string
   ) => Promise<{ ok: boolean; customer?: LoyaltyCustomer; error?: string }>;
+  onSwitchToTable?: () => void;
 }
 
 type StorePageId =
@@ -357,6 +358,7 @@ export const EstoreStorefront: React.FC<EstoreStorefrontProps> = React.memo(({
   selectedCatId: controlledCatId,
   onSelectCatId,
   onRegisterLoyalty,
+  onSwitchToTable,
 }) => {
   const [storePage, setStorePage] = useState<StorePageId>('home');
   const [internalCatId, setInternalCatId] = useState<string>('all');
@@ -1208,6 +1210,7 @@ export const EstoreStorefront: React.FC<EstoreStorefrontProps> = React.memo(({
                   tickets={promoTickets}
                   isLightSurface
                   onRegisterLoyalty={onRegisterLoyalty}
+                  onSwitchToTable={onSwitchToTable}
                 />
               </div>
             )}

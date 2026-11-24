@@ -19,7 +19,7 @@ export interface AddonMetaItem {
 }
 
 export const ADDON_CATEGORY_TABS: Array<{ id: AddonCategoryFilter; label: string }> = [
-  { id: 'all', label: 'جميع الميزات (20)' },
+  { id: 'all', label: 'جميع الميزات (22)' },
   { id: 'marketing', label: 'التسويق والعروض' },
   { id: 'sales', label: 'زيادة المبيعات والسلة' },
   { id: 'experience', label: 'تجربة الزبون والتفاعل' },
@@ -29,7 +29,7 @@ export const ADDON_CATEGORY_TABS: Array<{ id: AddonCategoryFilter; label: string
 export function getLocalizedAddonTabs(lang: SupportedLanguage = 'ar'): Array<{ id: AddonCategoryFilter; label: string }> {
   if (lang === 'en') {
     return [
-      { id: 'all', label: 'All Features (20)' },
+      { id: 'all', label: 'All Features (22)' },
       { id: 'marketing', label: 'Marketing & Offers' },
       { id: 'sales', label: 'Sales & Cart Boost' },
       { id: 'experience', label: 'Customer Experience' },
@@ -38,7 +38,7 @@ export function getLocalizedAddonTabs(lang: SupportedLanguage = 'ar'): Array<{ i
   }
   if (lang === 'ku') {
     return [
-      { id: 'all', label: 'هەموو تایبەتمەندییەکان (٢٠)' },
+      { id: 'all', label: 'هەموو تایبەتمەندییەکان (٢٢)' },
       { id: 'marketing', label: 'بازرگانی و ئۆفەرەکان' },
       { id: 'sales', label: 'زیادکردنی فرۆش و سەبەتە' },
       { id: 'experience', label: 'ئەزموونی کڕیار و کارلێک' },
@@ -189,6 +189,20 @@ export const ADDON_CATALOG: AddonMetaItem[] = [
     title: 'خصم الاستلام الذاتي الفوري',
     desc: 'تطبيق خصم تلقائي لمن يحضر لاستلام طلبه بنفسه من المطعم لتخفيف ضغط التوصيل.',
   },
+  {
+    key: 'dineInDiscount',
+    category: 'marketing',
+    icon: '🍽️',
+    title: 'خصم طلبات الصالة',
+    desc: 'تطبيق خصم تلقائي لطلبات الجلوس داخل الصالة وعرضه كبطاقة واضحة في المنيو.',
+  },
+  {
+    key: 'locationLinks',
+    category: 'experience',
+    icon: '📍',
+    title: 'موقع المطعم (خرائط كوكل وويز)',
+    desc: 'بطاقة بسيطة في المنيو تضم زرين للوصول المباشر إلى موقع المطعم عبر خرائط كوكل وويز.',
+  },
 ];
 
 export const STORE_ADDON_CATALOG: AddonMetaItem[] = ADDON_CATALOG.map((item) => {
@@ -260,6 +274,18 @@ export const STORE_ADDON_CATALOG: AddonMetaItem[] = ADDON_CATALOG.map((item) => 
         ...item,
         title: 'خصم الاستلام من المعرض',
         desc: 'تطبيق خصم تلقائي لمن يحضر لاستلام طلبه بنفسه من المتجر لتخفيف ضغط التوصيل.',
+      };
+    case 'dineInDiscount':
+      return {
+        ...item,
+        title: 'خصم الشراء داخل المعرض',
+        desc: 'تطبيق خصم تلقائي للزبائن عند الطلب داخل المعرض وعرضه كبطاقة واضحة في المتجر.',
+      };
+    case 'locationLinks':
+      return {
+        ...item,
+        title: 'موقع المتجر (خرائط كوكل وويز)',
+        desc: 'بطاقة بسيطة في المتجر تضم زرين للوصول المباشر إلى موقع المتجر عبر خرائط كوكل وويز.',
       };
     default:
       return item;
@@ -386,6 +412,18 @@ const ADDON_I18N: Record<AddonKey, { kuTitle: string; kuDesc: string; enTitle: s
     kuDesc: 'داشکاندنی خۆکار بۆ ئەوانەی خۆیان دێن داواکارییەکەیان لە لق وەردەگرن.',
     enTitle: 'Instant Self-Pickup Discount',
     enDesc: 'Incentivize branch pickup orders with an automatic discount percentage.',
+  },
+  dineInDiscount: {
+    kuTitle: 'داشکاندنی داواکاری ناو هۆڵ',
+    kuDesc: 'داشکاندنی خۆکار بۆ داواکاری سەر مێز لە ناو هۆڵ و پیشاندانی وەک کارتێک لە مینیۆدا.',
+    enTitle: 'Dine-In Table Discount',
+    enDesc: 'Apply an automatic discount for dine-in table orders and display it as a menu promo card.',
+  },
+  locationLinks: {
+    kuTitle: 'شوێنی چێشتخانە (گووگڵ و وەیز)',
+    kuDesc: 'کارتێکی سادە لە مینیۆدا بە دوو دوگمە بۆ کردنەوەی شوێن لە گووگڵ ماپس و وەیز.',
+    enTitle: 'Location Buttons (Google Maps & Waze)',
+    enDesc: 'Simple menu card with direct buttons to open your location on Google Maps and Waze.',
   },
 };
 
@@ -612,6 +650,23 @@ export function buildDefaultAddons(rest?: Restaurant): RestaurantAddons {
           ? 'اركن سيارتك أمام المتجر واضغط وصلت ليخرج الموظف بتغليف طلبك'
           : 'اركن سيارتك أمام البوابة واضغط وصلت ليخرج الموظف إليك'),
       allowArrivedPing: saved.curbsidePickupCar?.allowArrivedPing ?? true,
+    },
+    dineInDiscount: {
+      configured: isCfg('dineInDiscount'),
+      enabled: saved.dineInDiscount?.enabled ?? false,
+      title:
+        saved.dineInDiscount?.title ||
+        (isStore ? 'خصم خاص للطلبات داخل المعرض' : 'خصم خاص لطلبات الصالة'),
+      discountPercent: saved.dineInDiscount?.discountPercent ?? 10,
+      minOrderAmount: Math.max(0, Number(saved.dineInDiscount?.minOrderAmount ?? 0) || 0),
+      maxDiscountAmount: Math.max(0, Number(saved.dineInDiscount?.maxDiscountAmount ?? 0) || 0),
+    },
+    locationLinks: {
+      configured: isCfg('locationLinks'),
+      enabled: saved.locationLinks?.enabled ?? false,
+      title: saved.locationLinks?.title || (isStore ? 'موقع المتجر' : 'موقع المطعم'),
+      googleMapsUrl: saved.locationLinks?.googleMapsUrl ?? rest?.mapUrl ?? '',
+      wazeUrl: saved.locationLinks?.wazeUrl ?? '',
     },
   };
 }

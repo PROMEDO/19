@@ -339,17 +339,29 @@ export const AddonsPage: React.FC = () => {
                   addon.key === 'happyHour' ||
                   addon.key === 'limitedTimeDiscount' ||
                   addon.key === 'firstOrderDiscount' ||
-                  addon.key === 'pickupInstantDiscount') &&
-                  (Number(cfg.minOrderAmount ?? 0) > 0 || Number(cfg.maxDiscountAmount ?? 0) > 0) && (
+                  addon.key === 'pickupInstantDiscount' ||
+                  addon.key === 'dineInDiscount') &&
+                  (addon.key === 'dineInDiscount' ||
+                    Number(cfg.minOrderAmount ?? 0) > 0 ||
+                    Number(cfg.maxDiscountAmount ?? 0) > 0) && (
                     <div className="mp-addon-card-meta tabular-nums" style={{ color: isEnabled ? 'var(--brand)' : 'var(--muted)' }}>
+                      {addon.key === 'dineInDiscount' ? `خصم ${formatNumber(Number(cfg.discountPercent ?? 10))}%` : ''}
+                      {addon.key === 'dineInDiscount' && (Number(cfg.minOrderAmount ?? 0) > 0 || Number(cfg.maxDiscountAmount ?? 0) > 0) ? ' · ' : ''}
                       {Number(cfg.minOrderAmount ?? 0) > 0
                         ? `أدنى طلب: ${formatNumber(Number(cfg.minOrderAmount))} ${currency}`
+                        : addon.key === 'dineInDiscount'
+                        ? ''
                         : 'بدون حد أدنى'}
                       {Number(cfg.maxDiscountAmount ?? 0) > 0
                         ? ` · أعلى خصم: ${formatNumber(Number(cfg.maxDiscountAmount))} ${currency}`
                         : ''}
                     </div>
                   )}
+                {addon.key === 'locationLinks' && (Boolean(cfg.googleMapsUrl) || Boolean(cfg.wazeUrl)) && (
+                  <div className="mp-addon-card-meta" style={{ color: isEnabled ? 'var(--brand)' : 'var(--muted)' }}>
+                    {[cfg.googleMapsUrl ? 'كوكل ماب' : '', cfg.wazeUrl ? 'ويز' : ''].filter(Boolean).join(' · ')}
+                  </div>
+                )}
                 {addon.key === 'minOrder' && (
                   <div className="mp-addon-card-meta tabular-nums" style={{ color: isEnabled ? 'var(--brand)' : 'var(--muted)' }}>
                     الحد الأدنى: {formatNumber(Number(cfg.amount ?? 10000))} {currency}
@@ -1805,6 +1817,114 @@ export const AddonsPage: React.FC = () => {
                   </>
                 )}
 
+                {editingAddonKey === 'dineInDiscount' && (
+                  <>
+                    <label className="f">
+                      {terms.isStore ? 'عنوان خصم الطلب داخل المعرض' : 'عنوان خصم طلبات الصالة'}
+                      <input
+                        type="text"
+                        value={addonDraft.title || ''}
+                        onChange={(e) => updateDraft((p) => ({ ...p, title: e.target.value }))}
+                        placeholder={terms.isStore ? 'خصم خاص للطلبات داخل المعرض' : 'خصم خاص لطلبات الصالة'}
+                        className="mp-addon-modal-input"
+                      />
+                    </label>
+                    <label className="f">
+                      {terms.isStore ? 'نسبة الخصم الفوري داخل المعرض (%)' : 'نسبة الخصم الفوري لطلبات الصالة (%)'}
+                      <input
+                        type="number"
+                        min={1}
+                        max={90}
+                        value={addonDraft.discountPercent ?? 10}
+                        onChange={(e) => updateDraft((p) => ({ ...p, discountPercent: Number(e.target.value) }))}
+                        className="mp-addon-modal-input"
+                      />
+                    </label>
+                    <div className="mp-addon-two-col">
+                      <label className="f">
+                        {`الحد الأدنى للطلب (${currency})`}
+                        <input
+                          type="number"
+                          min={0}
+                          value={addonDraft.minOrderAmount ?? 0}
+                          onChange={(e) =>
+                            updateDraft((p) => ({
+                              ...p,
+                              minOrderAmount: e.target.value === '' ? 0 : Math.max(0, Number(e.target.value)),
+                            }))
+                          }
+                          placeholder="0 = لا يوجد حد أدنى"
+                          className="mp-addon-modal-input"
+                        />
+                      </label>
+                      <label className="f">
+                        {`الحد الأعلى للخصم (${currency})`}
+                        <input
+                          type="number"
+                          min={0}
+                          value={addonDraft.maxDiscountAmount ?? 0}
+                          onChange={(e) =>
+                            updateDraft((p) => ({
+                              ...p,
+                              maxDiscountAmount: e.target.value === '' ? 0 : Math.max(0, Number(e.target.value)),
+                            }))
+                          }
+                          placeholder="0 = لا يوجد حد أعلى"
+                          className="mp-addon-modal-input"
+                        />
+                      </label>
+                    </div>
+                    <div className="mp-addon-info-note">
+                      <div>
+                        تظهر هذه الميزة كبطاقة تفاعلية أعلى المنيو مثل بطاقة النقاط والخصومات، وعند اختيار الطلب داخل الصالة يُطبق الخصم تلقائياً في السلة.
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {editingAddonKey === 'locationLinks' && (
+                  <>
+                    <label className="f">
+                      عنوان البطاقة في المنيو
+                      <input
+                        type="text"
+                        value={addonDraft.title || ''}
+                        onChange={(e) => updateDraft((p) => ({ ...p, title: e.target.value }))}
+                        placeholder={terms.isStore ? 'موقع المتجر' : 'موقع المطعم'}
+                        className="mp-addon-modal-input"
+                      />
+                    </label>
+                    <label className="f">
+                      رابط الموقع على خرائط كوكل (Google Maps)
+                      <input
+                        type="url"
+                        dir="ltr"
+                        value={addonDraft.googleMapsUrl || ''}
+                        onChange={(e) => updateDraft((p) => ({ ...p, googleMapsUrl: e.target.value }))}
+                        placeholder="https://maps.app.goo.gl/..."
+                        className="mp-addon-modal-input"
+                        style={{ textAlign: 'left' }}
+                      />
+                    </label>
+                    <label className="f">
+                      رابط الموقع على ويز (Waze)
+                      <input
+                        type="url"
+                        dir="ltr"
+                        value={addonDraft.wazeUrl || ''}
+                        onChange={(e) => updateDraft((p) => ({ ...p, wazeUrl: e.target.value }))}
+                        placeholder="https://waze.com/ul?ll=..."
+                        className="mp-addon-modal-input"
+                        style={{ textAlign: 'left' }}
+                      />
+                    </label>
+                    <div className="mp-addon-info-note">
+                      <div>
+                        ستظهر بطاقة بسيطة في المنيو تضم زرين مباشرين للزبون (زر خرائط كوكل وزر ويز) لفتح الموقع بضغطة واحدة.
+                      </div>
+                    </div>
+                  </>
+                )}
 
               </div>
 

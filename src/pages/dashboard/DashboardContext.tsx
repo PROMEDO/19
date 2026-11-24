@@ -2009,6 +2009,35 @@ function useDashboardController({
       draftSnapshot.allowArrivedPing = draftSnapshot.allowArrivedPing !== false;
     }
 
+    if (keySnapshot === 'dineInDiscount') {
+      const pct = Math.min(90, Math.max(1, Number(draftSnapshot.discountPercent ?? 10) || 10));
+      draftSnapshot.title = String(
+        draftSnapshot.title || (terms.isStore ? 'خصم خاص للطلبات داخل المعرض' : 'خصم خاص لطلبات الصالة')
+      ).trim();
+      draftSnapshot.discountPercent = pct;
+      draftSnapshot.minOrderAmount = Math.max(0, Number(draftSnapshot.minOrderAmount ?? 0) || 0);
+      draftSnapshot.maxDiscountAmount = Math.max(0, Number(draftSnapshot.maxDiscountAmount ?? 0) || 0);
+    }
+
+    if (keySnapshot === 'locationLinks') {
+      const normalizeMapLink = (rawVal: unknown): string => {
+        const trimmed = String(rawVal || '').trim();
+        if (!trimmed) return '';
+        if (/^(javascript|data|vbscript):/i.test(trimmed)) return '';
+        return /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+      };
+      const googleMapsUrl = normalizeMapLink(draftSnapshot.googleMapsUrl);
+      const wazeUrl = normalizeMapLink(draftSnapshot.wazeUrl);
+      if (shouldEnable && !googleMapsUrl && !wazeUrl) {
+        return { ok: false, error: 'يرجى إدخال رابط موقع خرائط كوكل أو رابط ويز على الأقل.' };
+      }
+      draftSnapshot.title = String(
+        draftSnapshot.title || (terms.isStore ? 'موقع المتجر' : 'موقع المطعم')
+      ).trim();
+      draftSnapshot.googleMapsUrl = googleMapsUrl;
+      draftSnapshot.wazeUrl = wazeUrl;
+    }
+
     return { ok: true, draftSnapshot };
   };
 

@@ -713,6 +713,7 @@ export const VIP_ALL_ADDONS_LIST: string[] = [
   'خيار أدوات الطعام والمناديل وتقسيم الفاتورة',
   'الاستلام من السيارة وتقييمات الزبائن',
   'زر واتساب العائم ورنين الجرس الصوتي للطلبات',
+  'خصم طلبات الصالة وبطاقة الموقع (كوكل وويز)',
 ];
 
 export function getLocalizedVipAddonsList(lang: SupportedLanguage = 'ar'): string[] {
@@ -727,6 +728,7 @@ export function getLocalizedVipAddonsList(lang: SupportedLanguage = 'ar'): strin
       'Cutlery option & group order bill splitter',
       'Curbside car pickup & customer reviews',
       'Floating WhatsApp support & live order bell',
+      'Dine-in table discount & Google Maps / Waze location card',
     ];
   }
   if (lang === 'ku') {
@@ -740,6 +742,7 @@ export function getLocalizedVipAddonsList(lang: SupportedLanguage = 'ar'): strin
       'بژاردەی کەوچک و کلێنس و دابەشکردنی وەسڵی گروپ',
       'وەرگرتن لە ناو ئۆتۆمبێل و هەڵسەنگاندنی کڕیاران',
       'واتسئاپی سەرئاوکەوتوو و زەنگی دەنگی داواکاری',
+      'داشکاندنی ناو هۆڵ و کارتی شوێن (گووگڵ و وەیز)',
     ];
   }
   return VIP_ALL_ADDONS_LIST;
@@ -761,7 +764,7 @@ export const PLAN_FEATURE_TOGGLE_LABELS: Array<{
   { key: 'popupAd', label: 'البوب آب الإعلاني المنبثق' },
   { key: 'happyHourDiscount', label: 'خصم بساعات محددة ومؤقت العروض' },
   { key: 'customColors', label: 'تخصيص الألوان والهوية البصرية بالكامل' },
-  { key: 'allAddons', label: 'تفعيل كافة الإضافات التسويقية (20 إضافة)' },
+  { key: 'allAddons', label: 'تفعيل كافة الإضافات التسويقية (22 إضافة)' },
 ];
 
 export function getLocalizedPlanName(plan: Pick<PricingPlan, 'id' | 'n'>, lang: SupportedLanguage = 'ar'): string {
@@ -875,7 +878,7 @@ export function getDefaultComparisonRows(
       { key: 'discounts', label: 'Product discounts', included: Boolean(fm.itemDiscounts) },
       { key: 'popup', label: 'Promotional popup ad', included: Boolean(fm.popupAd) },
       { key: 'happyHour', label: 'Happy hour & timers', included: Boolean(fm.happyHourDiscount) },
-      { key: 'addons', label: 'All 20 Marketing Add-ons', included: Boolean(fm.allAddons) },
+      { key: 'addons', label: 'All 22 Marketing Add-ons', included: Boolean(fm.allAddons) },
     ];
   }
 
@@ -908,7 +911,7 @@ export function getDefaultComparisonRows(
       { key: 'discounts', label: 'داشکاندن لەسەر بەرهەمەکان', included: Boolean(fm.itemDiscounts) },
       { key: 'popup', label: 'پۆپئاپی ڕێکلامی', included: Boolean(fm.popupAd) },
       { key: 'happyHour', label: 'داشکاندنی کاتژمێری دیاریکراو', included: Boolean(fm.happyHourDiscount) },
-      { key: 'addons', label: '٢٠ تایبەتمەندی بازرگانی تەواو', included: Boolean(fm.allAddons) },
+      { key: 'addons', label: '٢٢ تایبەتمەندی بازرگانی تەواو', included: Boolean(fm.allAddons) },
     ];
   }
 
@@ -946,7 +949,7 @@ export function getDefaultComparisonRows(
     { key: 'discounts', label: 'خصومات على العناصر', included: Boolean(fm.itemDiscounts) },
     { key: 'popup', label: 'بوب آب إعلاني منبثق', included: Boolean(fm.popupAd) },
     { key: 'happyHour', label: 'خصم بساعات محددة', included: Boolean(fm.happyHourDiscount) },
-    { key: 'addons', label: '20 إضافة تسويقية وذكية شاملة', included: Boolean(fm.allAddons) },
+    { key: 'addons', label: '22 إضافة تسويقية وذكية شاملة', included: Boolean(fm.allAddons) },
   ];
 }
 
@@ -1213,7 +1216,7 @@ export const DEFAULT_PLANS_V2: PricingPlan[] = [
       'رابط مخصص لكل فرع باسم المشروع',
       'طلبات التوصيل والحجز والطاولات',
       'كل المظاهر + تخصيص الألوان',
-      '20 إضافة تسويقية وتشغيلية وذكية شاملة',
+      '22 إضافة تسويقية وتشغيلية وذكية شاملة',
     ],
     addonsHighlights: VIP_ALL_ADDONS_LIST,
     featuresMap: {
@@ -1389,6 +1392,8 @@ export function isAddonAllowedForPlan(addonKey: AddonKey | string, resolved: Res
   if (addonKey === 'happyHour' || addonKey === 'countdownTimer' || addonKey === 'limitedTimeDiscount') {
     return resolved.perms.happyHourDiscount;
   }
+  if (addonKey === 'dineInDiscount') return resolved.perms.tableOrders;
+  if (addonKey === 'locationLinks') return resolved.tierIndex >= 2;
   return false;
 }
 
@@ -1397,7 +1402,9 @@ export function getAddonRequiredPlanTier(addonKey: AddonKey | string): 'pro' | '
     addonKey === 'offerPopup' ||
     addonKey === 'happyHour' ||
     addonKey === 'countdownTimer' ||
-    addonKey === 'limitedTimeDiscount'
+    addonKey === 'limitedTimeDiscount' ||
+    addonKey === 'dineInDiscount' ||
+    addonKey === 'locationLinks'
   ) {
     return 'pro';
   }

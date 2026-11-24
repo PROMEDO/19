@@ -2090,7 +2090,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 }}
               >
                 <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 900, color: '#fbbf24' }}>
-                  {tr('✨ الـ 20 إضافة في باقة الأعمال الشاملة', '✨ ٢٠ زیادکراوی ناو پاکێجی کاروباری گشتی', '✨ All 20 Add-ons in the VIP Business Plan')}
+                  {tr('✨ الـ 22 إضافة في باقة الأعمال الشاملة', '✨ ٢٢ زیادکراوی ناو پاکێجی کاروباری گشتی', '✨ All 22 Add-ons in the VIP Business Plan')}
                 </h3>
                 <button
                   type="button"

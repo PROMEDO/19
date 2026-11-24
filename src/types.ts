@@ -561,6 +561,21 @@ export interface RestaurantAddons {
     instructions?: string;
     allowArrivedPing?: boolean;
   };
+  dineInDiscount?: {
+    configured?: boolean;
+    enabled?: boolean;
+    title?: string;
+    discountPercent?: number;
+    minOrderAmount?: number;
+    maxDiscountAmount?: number;
+  };
+  locationLinks?: {
+    configured?: boolean;
+    enabled?: boolean;
+    title?: string;
+    googleMapsUrl?: string;
+    wazeUrl?: string;
+  };
   [key: string]: any;
 }
 
@@ -847,6 +862,8 @@ export interface Order {
   spinDiscount?: number;
   pickupDiscount?: number;
   pickupDiscountLabel?: string;
+  dineInDiscount?: number;
+  dineInDiscountLabel?: string;
   totalDiscount?: number;
   status?: OrderStatus | string;
   st: string;

@@ -758,6 +758,13 @@ export const OrdersPage: React.FC = () => {
                       </div>
                     )}
 
+                    {Number(selectedOrder.dineInDiscount || 0) > 0 && (
+                      <div className="mp-od-total-row is-discount">
+                        <span>{selectedOrder.dineInDiscountLabel || 'خصم طلبات الصالة'}</span>
+                        <span className="tabular-nums">-{formatNumber(Number(selectedOrder.dineInDiscount || 0))} {currency}</span>
+                      </div>
+                    )}
+
                     {selectedOrder.freeGiftName && (
                       <div className="mp-od-total-row is-gift">
                         <span>هدية مجانية</span>

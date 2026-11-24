@@ -10,7 +10,7 @@ import { formatNumber } from '../../utils/storage';
 
 export interface MenuPromoTicketItem {
   id: string;
-  kind: 'discount' | 'free_delivery' | 'loyalty';
+  kind: 'discount' | 'free_delivery' | 'loyalty' | 'location';
   eyebrow: string;
   title: string;
   footer: string;
@@ -25,6 +25,10 @@ export interface MenuPromoTicketItem {
   loyaltyCustomerPhone?: string;
   restaurantName?: string;
   currency?: string;
+  canSwitchToTable?: boolean;
+  isTableSelected?: boolean;
+  googleMapsUrl?: string;
+  wazeUrl?: string;
 }
 
 export interface BuildMenuPromoTicketsInput {
@@ -35,6 +39,7 @@ export interface BuildMenuPromoTicketsInput {
   formatMoney: (amt: number) => string;
   firstOrderPct?: number;
   pickupPct?: number;
+  canSelectTable?: boolean;
   freeDeliveryEnabled?: boolean;
   freeDeliveryMin?: number;
   qualifiesFreeDelivery?: boolean;
@@ -47,6 +52,13 @@ export interface BuildMenuPromoTicketsInput {
   restaurantName?: string;
 }
 
+function normalizeSafeMapUrl(raw?: string): string {
+  const trimmed = String(raw || '').trim();
+  if (!trimmed) return '';
+  if (/^(javascript|data|vbscript):/i.test(trimmed)) return '';
+  return /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+}
+
 export function buildMenuPromoTickets({
   addons,
   activeMenuDiscount,
@@ -55,6 +67,7 @@ export function buildMenuPromoTickets({
   formatMoney,
   firstOrderPct = 0,
   pickupPct = 0,
+  canSelectTable = false,
   freeDeliveryEnabled = false,
   freeDeliveryMin = 0,
   qualifiesFreeDelivery = false,
@@ -164,6 +177,32 @@ export function buildMenuPromoTickets({
     });
   }
 
+  if (addons.dineInDiscount?.enabled) {
+    const dineInPct = Math.max(0, Math.min(90, Number(addons.dineInDiscount.discountPercent ?? 10) || 10));
+    if (dineInPct > 0) {
+      const minReq = Math.max(0, Number(addons.dineInDiscount.minOrderAmount || 0));
+      const maxCap = Math.max(0, Number(addons.dineInDiscount.maxDiscountAmount || 0));
+      const customTitle = (addons.dineInDiscount.title || '').trim();
+      const isTableSelected = orderType === 'table';
+      tickets.push({
+        id: 'promo-dinein-discount',
+        kind: 'discount',
+        eyebrow: customTitle || 'لطلبات الصالة',
+        title: `خصم ${formatNumber(dineInPct)}٪`,
+        footer: isTableSelected ? 'مُفعّل لطلبك ✓' : 'عند الطلب داخل الصالة',
+        isUnlocked: isTableSelected,
+        modalTitle:
+          maxCap > 0
+            ? `خصم ${formatNumber(dineInPct)}٪ لطلبات الصالة لغاية ${formatMoney(maxCap)}`
+            : `خصم ${formatNumber(dineInPct)}٪ على طلبات الصالة`,
+        minOrderText: resolveMinOrderText(minReq),
+        maxDiscountText: maxCap > 0 ? formatMoney(maxCap) : 'لا يوجد حد أقصى',
+        canSwitchToTable: canSelectTable && !isTableSelected,
+        isTableSelected,
+      });
+    }
+  }
+
   if ((freeDeliveryEnabled || spinFreeDelivery) && orderType === 'delivery') {
     const hasMin = freeDeliveryMin > 0 && !spinFreeDelivery;
     const maxCap = Math.max(0, Number(addons.freeDeliveryProgress?.maxDiscountAmount || 0));
@@ -179,6 +218,25 @@ export function buildMenuPromoTickets({
       minOrderText: hasMin ? formatMoney(freeDeliveryMin) : 'لا يوجد حد أدنى',
       maxDiscountText: maxCap > 0 ? formatMoney(maxCap) : 'لا يوجد حد أقصى',
     });
+  }
+
+  if (addons.locationLinks?.enabled) {
+    const googleMapsUrl = normalizeSafeMapUrl(addons.locationLinks.googleMapsUrl);
+    const wazeUrl = normalizeSafeMapUrl(addons.locationLinks.wazeUrl);
+    if (googleMapsUrl || wazeUrl) {
+      const locTitle = (addons.locationLinks.title || '').trim() || 'موقع المطعم';
+      tickets.push({
+        id: 'promo-location-links',
+        kind: 'location',
+        eyebrow: 'الاتجاهات والخرائط',
+        title: locTitle,
+        footer: 'افتح الموقع',
+        modalTitle: locTitle,
+        googleMapsUrl,
+        wazeUrl,
+        restaurantName,
+      });
+    }
   }
 
   return tickets;
@@ -229,6 +287,45 @@ function MintPlusSealBadge() {
         strokeWidth="2.35"
         strokeLinecap="round"
       />
+    </svg>
+  );
+}
+
+function LocationPinSealBadge() {
+  return (
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+      <path d={SCALLOP_SEAL_PATH} fill="#0284C7" />
+      <path
+        d="M14 8.2C11.4 8.2 9.4 10.2 9.4 12.7C9.4 16 14 20.2 14 20.2C14 20.2 18.6 16 18.6 12.7C18.6 10.2 16.6 8.2 14 8.2Z"
+        fill="#FFFFFF"
+      />
+      <circle cx="14" cy="12.6" r="1.8" fill="#0284C7" />
+    </svg>
+  );
+}
+
+function GoogleMapsMiniIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2Z"
+        fill="currentColor"
+      />
+      <circle cx="12" cy="9" r="2.6" fill="#FFFFFF" />
+    </svg>
+  );
+}
+
+function WazeMiniIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M12.4 4C7.9 4 4.5 7.1 4.5 11.2C4.5 12.8 5 14.2 5.9 15.4C5.4 16.2 4.4 16.6 4.4 16.6C4.4 16.6 5.6 18.2 8.2 18.2H8.4C8.6 19.2 9.5 20 10.5 20C11.6 20 12.5 19.1 12.6 18H14.4C14.5 19.1 15.4 20 16.5 20C17.6 20 18.5 19.1 18.5 18C19.8 16.7 20.5 14.6 20.5 11.9C20.5 7.4 17 4 12.4 4Z"
+        fill="currentColor"
+      />
+      <circle cx="10.2" cy="10.5" r="1.2" fill="#FFFFFF" />
+      <circle cx="15.2" cy="10.5" r="1.2" fill="#FFFFFF" />
+      <path d="M10.2 13.7C11 14.7 13.8 14.7 14.8 13.7" stroke="#FFFFFF" strokeWidth="1.4" strokeLinecap="round" />
     </svg>
   );
 }
@@ -422,6 +519,28 @@ function LoyaltyCardCornerOrnament() {
   );
 }
 
+function LocationMap3DIllustration() {
+  return (
+    <svg width="98" height="92" viewBox="0 0 98 92" fill="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="mpMapTile" x1="16" y1="36" x2="82" y2="78" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#E0F2FE" />
+          <stop offset="100%" stopColor="#BAE6FD" />
+        </linearGradient>
+        <linearGradient id="mpPinGrad" x1="36" y1="12" x2="62" y2="60" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#38BDF8" />
+          <stop offset="100%" stopColor="#0284C7" />
+        </linearGradient>
+      </defs>
+      <ellipse cx="49" cy="81" rx="30" ry="5" fill="#0F172A" fillOpacity="0.1" />
+      <rect x="17" y="40" width="64" height="36" rx="10" fill="url(#mpMapTile)" stroke="#FFFFFF" strokeWidth="2.2" />
+      <path d="M22 58L41 50L57 62L76 47" stroke="#FFFFFF" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M49 14C39.6 14 32 21.4 32 30.6C32 42.4 49 58 49 58C49 58 66 42.4 66 30.6C66 21.4 58.4 14 49 14Z" fill="url(#mpPinGrad)" stroke="#FFFFFF" strokeWidth="2" />
+      <circle cx="49" cy="30" r="6.5" fill="#FFFFFF" />
+    </svg>
+  );
+}
+
 interface MenuPromoTicketsProps {
   tickets: MenuPromoTicketItem[];
   isLightSurface?: boolean;
@@ -430,6 +549,7 @@ interface MenuPromoTicketsProps {
     name: string,
     phone: string
   ) => Promise<{ ok: boolean; customer?: LoyaltyCustomer; error?: string }>;
+  onSwitchToTable?: () => void;
 }
 
 export const MenuPromoTickets: React.FC<MenuPromoTicketsProps> = ({
@@ -437,6 +557,7 @@ export const MenuPromoTickets: React.FC<MenuPromoTicketsProps> = ({
   isLightSurface = true,
   className = '',
   onRegisterLoyalty,
+  onSwitchToTable,
 }) => {
   const [activeTicket, setActiveTicket] = useState<MenuPromoTicketItem | null>(null);
   const [loyaltyNameDraft, setLoyaltyNameDraft] = useState('');
@@ -507,6 +628,62 @@ export const MenuPromoTickets: React.FC<MenuPromoTicketsProps> = ({
       >
         {tickets.map((tk) => {
           const isLoyalty = tk.kind === 'loyalty';
+          const isLocation = tk.kind === 'location';
+
+          if (isLocation) {
+            return (
+              <div
+                key={tk.id}
+                role="button"
+                tabIndex={0}
+                className={`mp-promo-ticket ${modeClass} is-location`}
+                onClick={() => setActiveTicket(tk)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setActiveTicket(tk);
+                  }
+                }}
+              >
+                <span className="mp-promo-ticket-badge">
+                  <LocationPinSealBadge />
+                </span>
+
+                <span className="mp-promo-ticket-eyebrow">{tk.eyebrow}</span>
+                <strong className="mp-promo-ticket-title">{tk.title}</strong>
+
+                <span className="mp-promo-ticket-divider" aria-hidden="true" />
+
+                <div className="mp-promo-location-actions" onClick={(e) => e.stopPropagation()}>
+                  {tk.googleMapsUrl && (
+                    <a
+                      href={tk.googleMapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mp-promo-loc-btn is-google"
+                      title="فتح في خرائط كوكل"
+                    >
+                      <GoogleMapsMiniIcon />
+                      <span>كوكل</span>
+                    </a>
+                  )}
+                  {tk.wazeUrl && (
+                    <a
+                      href={tk.wazeUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mp-promo-loc-btn is-waze"
+                      title="فتح في ويز"
+                    >
+                      <WazeMiniIcon />
+                      <span>ويز</span>
+                    </a>
+                  )}
+                </div>
+              </div>
+            );
+          }
+
           return (
             <button
               key={tk.id}
@@ -570,6 +747,8 @@ export const MenuPromoTickets: React.FC<MenuPromoTicketsProps> = ({
                 <LoyaltyMedal3DIllustration />
               ) : liveActiveTicket.kind === 'free_delivery' ? (
                 <DeliveryScooter3DIllustration />
+              ) : liveActiveTicket.kind === 'location' ? (
+                <LocationMap3DIllustration />
               ) : (
                 <DiscountTags3DIllustration />
               )}
@@ -579,7 +758,37 @@ export const MenuPromoTickets: React.FC<MenuPromoTicketsProps> = ({
               {liveActiveTicket.modalTitle}
             </h2>
 
-            {liveActiveTicket.kind === 'loyalty' ? (
+            {liveActiveTicket.kind === 'location' ? (
+              <div className={`mp-promo-sheet-ticket-box ${modeClass}`}>
+                <p className="mp-promo-sheet-loyalty-note" style={{ marginBottom: '14px' }}>
+                  اختر تطبيق الخرائط المفضل للوصول إلى {liveActiveTicket.restaurantName || 'الموقع'} مباشرة
+                </p>
+                <div className="mp-promo-sheet-loc-grid">
+                  {liveActiveTicket.googleMapsUrl && (
+                    <a
+                      href={liveActiveTicket.googleMapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mp-promo-sheet-loc-btn is-google"
+                    >
+                      <GoogleMapsMiniIcon />
+                      <span>فتح في خرائط كوكل</span>
+                    </a>
+                  )}
+                  {liveActiveTicket.wazeUrl && (
+                    <a
+                      href={liveActiveTicket.wazeUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mp-promo-sheet-loc-btn is-waze"
+                    >
+                      <WazeMiniIcon />
+                      <span>فتح في ويز (Waze)</span>
+                    </a>
+                  )}
+                </div>
+              </div>
+            ) : liveActiveTicket.kind === 'loyalty' ? (
               <div className="mp-promo-loyalty-sheet-body">
                 {/* Digital Loyalty Card Preview */}
                 <div className={`mp-promo-loyalty-digital-card ${modeClass}`}>
@@ -697,13 +906,35 @@ export const MenuPromoTickets: React.FC<MenuPromoTicketsProps> = ({
               </div>
             )}
 
-            <button
-              type="button"
-              className="mp-promo-sheet-cta"
-              onClick={() => setActiveTicket(null)}
-            >
-              حسناً
-            </button>
+            {liveActiveTicket.canSwitchToTable && onSwitchToTable ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <button
+                  type="button"
+                  className="mp-promo-sheet-cta"
+                  onClick={() => {
+                    onSwitchToTable();
+                    setActiveTicket(null);
+                  }}
+                >
+                  اختيار الطلب داخل الصالة وتفعيل الخصم
+                </button>
+                <button
+                  type="button"
+                  className={`mp-promo-sheet-secondary-cta ${modeClass}`}
+                  onClick={() => setActiveTicket(null)}
+                >
+                  إغلاق
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                className="mp-promo-sheet-cta"
+                onClick={() => setActiveTicket(null)}
+              >
+                حسناً
+              </button>
+            )}
           </div>
         </div>
       )}

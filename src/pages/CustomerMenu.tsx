@@ -1847,6 +1847,27 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
         )
       : 0;
 
+  // Dine-In Table Discount
+  const dineInPct =
+    addons.dineInDiscount?.enabled && orderType === 'table'
+      ? Math.max(0, Math.min(90, Number(addons.dineInDiscount.discountPercent ?? 10) || 10))
+      : 0;
+  const dineInMinOrder = Math.max(0, Number(addons.dineInDiscount?.minOrderAmount ?? 0) || 0);
+  const dineInMaxDiscount = Math.max(0, Number(addons.dineInDiscount?.maxDiscountAmount ?? 0) || 0);
+  const dineInDiscountAmt =
+    dineInPct > 0
+      ? computeOrderLevelDiscount(
+          Math.max(
+            0,
+            subtotal - menuOrderDiscountAmt - firstOrderDiscountAmt - spinDiscountAmt - pickupDiscountAmt
+          ),
+          'percent',
+          dineInPct,
+          dineInMinOrder,
+          dineInMaxDiscount
+        )
+      : 0;
+
   const finalTotal =
     Math.max(
       0,
@@ -1854,7 +1875,8 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
         menuOrderDiscountAmt -
         firstOrderDiscountAmt -
         spinDiscountAmt -
-        pickupDiscountAmt
+        pickupDiscountAmt -
+        dineInDiscountAmt
     ) +
     effectiveDeliveryFee;
 
@@ -1888,6 +1910,14 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
     return `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
   }, [addons.countdownTimer?.enabled, addons.countdownTimer?.endHour, nowMs]);
 
+  const canSelectTable = enabledTypes.includes('table');
+  const handleSwitchToTableOrder = useCallback(() => {
+    if (canSelectTable) {
+      setOrderType('table');
+      showToast('تم تفعيل الطلب داخل الصالة وتطبيق الخصم ✓');
+    }
+  }, [canSelectTable, showToast]);
+
   const promoTickets = useMemo(
     () =>
       buildMenuPromoTickets({
@@ -1898,6 +1928,7 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
         formatMoney: fmtMoney,
         firstOrderPct,
         pickupPct,
+        canSelectTable,
         freeDeliveryEnabled,
         freeDeliveryMin,
         qualifiesFreeDelivery,
@@ -1916,6 +1947,7 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
       currency,
       firstOrderPct,
       pickupPct,
+      canSelectTable,
       freeDeliveryEnabled,
       freeDeliveryMin,
       qualifiesFreeDelivery,
@@ -2288,9 +2320,15 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
 
       const origSubtotal = resolvedCartLines.reduce((s, line) => s + line.origUnitPrice * line.qty, 0);
       const itemsDiscountTotal = Math.max(0, origSubtotal - subtotal);
-      const orderLevelDiscountTotal = menuOrderDiscountAmt + firstOrderDiscountAmt + spinDiscountAmt + pickupDiscountAmt;
+      const orderLevelDiscountTotal =
+        menuOrderDiscountAmt +
+        firstOrderDiscountAmt +
+        spinDiscountAmt +
+        pickupDiscountAmt +
+        dineInDiscountAmt;
       const totalDiscount = itemsDiscountTotal + orderLevelDiscountTotal;
       const pickupLabelText = addons.pickupInstantDiscount?.title || 'خصم الاستلام الفوري';
+      const dineInLabelText = addons.dineInDiscount?.title || 'خصم طلبات الصالة';
       const menuDiscountLabelText =
         itemsDiscountTotal > 0 || menuOrderDiscountAmt > 0
           ? activeMenuDiscount.sourceLabel || 'خصم على الأطباق'
@@ -2346,6 +2384,8 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
         spinRewardLabel: spinDiscountAmt > 0 && spinWonReward ? spinWonReward.label : undefined,
         pickupDiscount: pickupDiscountAmt > 0 ? pickupDiscountAmt : undefined,
         pickupDiscountLabel: pickupDiscountAmt > 0 ? pickupLabelText : undefined,
+        dineInDiscount: dineInDiscountAmt > 0 ? dineInDiscountAmt : undefined,
+        dineInDiscountLabel: dineInDiscountAmt > 0 ? dineInLabelText : undefined,
         totalDiscount: totalDiscount > 0 ? totalDiscount : undefined,
         freeGiftName: qualifiesFreeGift && addons.freeGiftThreshold?.giftName ? addons.freeGiftThreshold.giftName : undefined,
         needCutlery: addons.cutleryOption?.enabled ? needCutlery : undefined,
@@ -2358,7 +2398,12 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
 
       const discountedOrdersTotal = Math.max(
         0,
-        subtotal - menuOrderDiscountAmt - firstOrderDiscountAmt - spinDiscountAmt - pickupDiscountAmt
+        subtotal -
+          menuOrderDiscountAmt -
+          firstOrderDiscountAmt -
+          spinDiscountAmt -
+          pickupDiscountAmt -
+          dineInDiscountAmt
       );
       const overallDiscPct =
         origSubtotal > 0 && totalDiscount > 0
@@ -2754,6 +2799,7 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
             onSelectCatId={setEstoreCatFilter}
             promoTickets={promoTickets}
             onRegisterLoyalty={handleRegisterLoyaltyCustomer}
+            onSwitchToTable={handleSwitchToTableOrder}
           />
         </Suspense>
       ) : (
@@ -2921,6 +2967,7 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
               tickets={promoTickets}
               isLightSurface={isLightMenu}
               onRegisterLoyalty={handleRegisterLoyaltyCustomer}
+              onSwitchToTable={handleSwitchToTableOrder}
             />
           </div>
         </>
@@ -3112,6 +3159,7 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
               tickets={promoTickets}
               isLightSurface={isLightMenu}
               onRegisterLoyalty={handleRegisterLoyaltyCustomer}
+              onSwitchToTable={handleSwitchToTableOrder}
             />
           </div>
         </>
@@ -3204,8 +3252,9 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
           </div>
         )}
 
-        {/* Active Smart Deal Pills: Pickup Instant Discount & Mood Finder */}
+        {/* Active Smart Deal Pills: Pickup Instant Discount, Dine-In Discount & Mood Finder */}
         {((!isCatalogViewOnly && addons.pickupInstantDiscount?.enabled && orderType === 'pickup') ||
+          (!isCatalogViewOnly && addons.dineInDiscount?.enabled && orderType === 'table') ||
           addons.moodMealFinder?.enabled) && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginTop: '10px' }}>
             {addons.moodMealFinder?.enabled && (
@@ -3246,6 +3295,24 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
                 }}
               >
                 🏃 {addons.pickupInstantDiscount.title || 'خصم الاستلام الفوري'}: {addons.pickupInstantDiscount.discountPercent || 10}% تلقائي
+              </span>
+            )}
+            {!isCatalogViewOnly && addons.dineInDiscount?.enabled && orderType === 'table' && (
+              <span
+                className="pm-shape-pill"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '5px',
+                  padding: '6px 11px',
+                  fontSize: '12px',
+                  fontWeight: 800,
+                  background: 'rgba(16, 185, 129, 0.14)',
+                  border: '1px solid rgba(16, 185, 129, 0.35)',
+                  color: isLightMenu ? '#047857' : '#6ee7b7',
+                }}
+              >
+                🍽️ {addons.dineInDiscount.title || 'خصم طلبات الصالة'}: {addons.dineInDiscount.discountPercent || 10}% تلقائي
               </span>
             )}
           </div>
@@ -5314,6 +5381,12 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
                       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', color: accentText }}>
                         <span>{addons.pickupInstantDiscount?.title || 'خصم الاستلام الفوري'} ({pickupPct}%)</span>
                         <b className="tabular-nums">-{fmtMoney(pickupDiscountAmt)}</b>
+                      </div>
+                    )}
+                    {dineInDiscountAmt > 0 && (
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', color: accentText }}>
+                        <span>{addons.dineInDiscount?.title || 'خصم طلبات الصالة'} ({dineInPct}%)</span>
+                        <b className="tabular-nums">-{fmtMoney(dineInDiscountAmt)}</b>
                       </div>
                     )}
                     {orderType === 'delivery' && (

@@ -13684,6 +13684,136 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
   transform: scale(0.99);
 }
 
+.mp-promo-sheet-secondary-cta {
+  width: 100%;
+  height: 42px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 13px;
+  background: transparent;
+  color: #475569;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.mp-promo-sheet-secondary-cta.is-dark {
+  border-color: rgba(255, 255, 255, 0.16);
+  color: #cbd5e1;
+}
+
+.mp-promo-ticket.is-location {
+  background: linear-gradient(180deg, #f8fbff 0%, #eff6ff 100%);
+  border-color: rgba(14, 165, 233, 0.18);
+}
+
+.mp-promo-ticket.is-dark.is-location {
+  background: linear-gradient(180deg, rgba(14, 165, 233, 0.09) 0%, rgba(14, 165, 233, 0.16) 100%);
+  border-color: rgba(56, 189, 248, 0.24);
+}
+
+.mp-promo-location-actions {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 100%;
+}
+
+.mp-promo-loc-btn {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 26px;
+  padding: 0 6px;
+  border-radius: 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: transform 0.14s ease, filter 0.14s ease;
+}
+
+.mp-promo-loc-btn:active {
+  transform: scale(0.96);
+}
+
+.mp-promo-loc-btn.is-google {
+  background: rgba(16, 185, 129, 0.14);
+  color: #047857;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.mp-promo-ticket.is-dark .mp-promo-loc-btn.is-google {
+  background: rgba(16, 185, 129, 0.2);
+  color: #6ee7b7;
+  border-color: rgba(52, 211, 153, 0.35);
+}
+
+.mp-promo-loc-btn.is-waze {
+  background: rgba(14, 165, 233, 0.15);
+  color: #0369a1;
+  border: 1px solid rgba(14, 165, 233, 0.32);
+}
+
+.mp-promo-ticket.is-dark .mp-promo-loc-btn.is-waze {
+  background: rgba(56, 189, 248, 0.2);
+  color: #7dd3fc;
+  border-color: rgba(56, 189, 248, 0.36);
+}
+
+.mp-promo-sheet-loc-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 9px;
+}
+
+.mp-promo-sheet-loc-btn {
+  height: 44px;
+  border-radius: 13px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: transform 0.14s ease;
+}
+
+.mp-promo-sheet-loc-btn:active {
+  transform: scale(0.985);
+}
+
+.mp-promo-sheet-loc-btn.is-google {
+  background: rgba(16, 185, 129, 0.14);
+  color: #047857;
+  border: 1px solid rgba(16, 185, 129, 0.32);
+}
+
+.mp-promo-sheet.is-dark .mp-promo-sheet-loc-btn.is-google {
+  background: rgba(16, 185, 129, 0.2);
+  color: #6ee7b7;
+  border-color: rgba(52, 211, 153, 0.36);
+}
+
+.mp-promo-sheet-loc-btn.is-waze {
+  background: rgba(14, 165, 233, 0.15);
+  color: #0369a1;
+  border: 1px solid rgba(14, 165, 233, 0.32);
+}
+
+.mp-promo-sheet.is-dark .mp-promo-sheet-loc-btn.is-waze {
+  background: rgba(56, 189, 248, 0.2);
+  color: #7dd3fc;
+  border-color: rgba(56, 189, 248, 0.36);
+}
+
 @media (min-width: 640px) {
   .mp-promo-sheet-backdrop {
     align-items: center;
