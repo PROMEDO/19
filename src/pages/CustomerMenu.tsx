@@ -6499,8 +6499,8 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
                 height: '34px',
                 borderRadius: '50%',
                 background: 'rgba(15, 23, 42, 0.56)',
-                backdropFilter: 'blur(10px)',
-                WebkitBackdropFilter: 'blur(10px)',
+                backdropFilter: 'blur(5px)',
+                WebkitBackdropFilter: 'blur(5px)',
                 border: '1px solid rgba(255, 255, 255, 0.22)',
                 display: 'grid',
                 placeItems: 'center',
@@ -7211,8 +7211,8 @@ export const PublicMenuView: React.FC<PublicMenuViewProps> = ({
               justifyContent: 'center',
               padding: '20px',
               backgroundColor: 'rgba(2, 6, 23, 0.84)',
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)',
+              backdropFilter: 'blur(6px)',
+              WebkitBackdropFilter: 'blur(6px)',
               opacity: 1,
             }}
           >

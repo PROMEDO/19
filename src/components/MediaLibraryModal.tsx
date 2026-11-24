@@ -70,8 +70,8 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({
         justifyContent: 'center',
         padding: '16px',
         background: 'rgba(0, 0, 0, 0.62)',
-        backdropFilter: 'blur(4px)',
-        WebkitBackdropFilter: 'blur(4px)',
+        backdropFilter: 'blur(2px)',
+        WebkitBackdropFilter: 'blur(2px)',
         zIndex: 100150,
       }}
     >
@@ -86,8 +86,8 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({
           display: 'flex',
           flexDirection: 'column',
           background: 'var(--mp-glass-bg-elevated)',
-          backdropFilter: 'blur(26px) saturate(1.45)',
-          WebkitBackdropFilter: 'blur(26px) saturate(1.45)',
+          backdropFilter: 'blur(13px) saturate(1.45)',
+          WebkitBackdropFilter: 'blur(13px) saturate(1.45)',
           border: '1px solid var(--mp-glass-border)',
           borderRadius: '28px',
           color: 'var(--ink)',

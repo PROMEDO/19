@@ -1,9 +1,6 @@
 import {createRoot} from 'react-dom/client';
 import App from './App.tsx';
 import './styles/platform-style.css';
-import {initGlassScrollGlint} from './utils/glassGlint';
-
-initGlassScrollGlint();
 
 const IN_APP_BROWSER_RE =
   /\b(Instagram|FBAN|FBAV|FB_IAB|Threads|TikTok|BytedanceWebview|musical_ly|Snapchat|Line|MicroMessenger)\b/i;

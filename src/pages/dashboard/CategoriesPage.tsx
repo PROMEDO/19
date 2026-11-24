@@ -516,8 +516,8 @@ export const CategoriesPage: React.FC = () => {
               justifyContent: 'center',
               padding: '16px',
               background: 'rgba(0, 0, 0, 0.62)',
-              backdropFilter: 'blur(4px)',
-              WebkitBackdropFilter: 'blur(4px)',
+              backdropFilter: 'blur(2px)',
+              WebkitBackdropFilter: 'blur(2px)',
               zIndex: 99999,
             }}
           >
@@ -715,8 +715,8 @@ export const CategoriesPage: React.FC = () => {
               justifyContent: 'center',
               padding: '16px',
               background: 'rgba(0, 0, 0, 0.62)',
-              backdropFilter: 'blur(4px)',
-              WebkitBackdropFilter: 'blur(4px)',
+              backdropFilter: 'blur(2px)',
+              WebkitBackdropFilter: 'blur(2px)',
               zIndex: 99999,
             }}
           >

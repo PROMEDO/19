@@ -85,8 +85,8 @@ export const PauseVisibilityModal: React.FC<PauseVisibilityModalProps> = ({
         justifyContent: 'center',
         padding: '16px',
         background: 'rgba(0, 0, 0, 0.65)',
-        backdropFilter: 'blur(5px)',
-        WebkitBackdropFilter: 'blur(5px)',
+        backdropFilter: 'blur(2.5px)',
+        WebkitBackdropFilter: 'blur(2.5px)',
         zIndex: 99999,
       }}
     >
@@ -101,8 +101,8 @@ export const PauseVisibilityModal: React.FC<PauseVisibilityModalProps> = ({
           maxHeight: 'calc(100dvh - 32px)',
           overflowY: 'auto',
           background: 'var(--mp-glass-bg-elevated, rgba(22, 32, 46, 0.9))',
-          backdropFilter: 'blur(26px) saturate(1.45)',
-          WebkitBackdropFilter: 'blur(26px) saturate(1.45)',
+          backdropFilter: 'blur(13px) saturate(1.45)',
+          WebkitBackdropFilter: 'blur(13px) saturate(1.45)',
           border: '1px solid var(--mp-glass-border, rgba(255,255,255,0.16))',
           color: 'var(--ink)',
           borderRadius: '28px',

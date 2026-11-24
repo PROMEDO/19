@@ -119,15 +119,12 @@ html[data-theme="light"],
   /* Fixed Grid Backdrop Tokens (Light Mode) */
   --mp-grid-size: 32px;
   --mp-grid-line: rgba(15, 23, 42, 0.105);
-  --mp-glint-pos: 18%;
-  --mp-glint-angle: 135deg;
-  --mp-glint-opacity: 0.22;
 
   /* Apple Liquid Glass Tokens (Light Mode — Lightly Frosted Translucent Crystal over Grid) */
-  --mp-glass-blur: blur(6px) saturate(1.45) brightness(1.02);
-  --mp-glass-sticky-blur: blur(9px) saturate(1.55) brightness(1.02);
-  --mp-glass-control-blur: blur(4px) saturate(1.35);
-  --mp-glass-modal-blur: blur(12px) saturate(1.55) brightness(1.02);
+  --mp-glass-blur: blur(3px) saturate(1.45) brightness(1.02);
+  --mp-glass-sticky-blur: blur(4.5px) saturate(1.55) brightness(1.02);
+  --mp-glass-control-blur: blur(2px) saturate(1.35);
+  --mp-glass-modal-blur: blur(6px) saturate(1.55) brightness(1.02);
   --mp-glass-bg: linear-gradient(
     145deg,
     rgba(255, 255, 255, 0.38) 0%,
@@ -153,27 +150,17 @@ html[data-theme="light"],
   --mp-glass-control: rgba(255, 255, 255, 0.30);
   --mp-glass-control-hover: rgba(255, 255, 255, 0.48);
 
-  /* Subtle 1px Specular Rim Gradient & Scroll-Reactive Glass Sheen */
+  /* Subtle 1px Specular Rim Gradient */
   --mp-glass-rim: linear-gradient(
-    var(--mp-glint-angle, 135deg),
+    135deg,
     rgba(255, 255, 255, 0.88) 0%,
     rgba(255, 255, 255, 0.36) 28%,
     rgba(255, 255, 255, 0.14) 52%,
     rgba(255, 255, 255, 0.40) 78%,
     rgba(255, 255, 255, 0.82) 100%
   );
-  --mp-glass-sheen: linear-gradient(
-    118deg,
-    transparent 0%,
-    transparent 34%,
-    rgba(255, 255, 255, 0.14) 44%,
-    rgba(255, 255, 255, 0.42) 50%,
-    rgba(209, 250, 229, 0.18) 56%,
-    transparent 66%,
-    transparent 100%
-  );
   --mp-glass-rim-control: linear-gradient(
-    var(--mp-glint-angle, 135deg),
+    135deg,
     rgba(255, 255, 255, 0.58) 0%,
     rgba(255, 255, 255, 0.18) 50%,
     rgba(255, 255, 255, 0.48) 100%
@@ -231,10 +218,10 @@ html[data-theme="dark"],
   --mp-grid-line: rgba(255, 255, 255, 0.095);
 
   /* Apple Liquid Glass Tokens (Dark Mode — Lightly Frosted Translucent Crystal over Grid) */
-  --mp-glass-blur: blur(5.5px) saturate(1.45);
-  --mp-glass-sticky-blur: blur(8px) saturate(1.55);
-  --mp-glass-control-blur: blur(4px) saturate(1.35);
-  --mp-glass-modal-blur: blur(12px) saturate(1.55);
+  --mp-glass-blur: blur(2.75px) saturate(1.45);
+  --mp-glass-sticky-blur: blur(4px) saturate(1.55);
+  --mp-glass-control-blur: blur(2px) saturate(1.35);
+  --mp-glass-modal-blur: blur(6px) saturate(1.55);
   --mp-glass-bg: linear-gradient(
     145deg,
     rgba(255, 255, 255, 0.08) 0%,
@@ -260,27 +247,17 @@ html[data-theme="dark"],
   --mp-glass-control: rgba(255, 255, 255, 0.055);
   --mp-glass-control-hover: rgba(255, 255, 255, 0.12);
 
-  /* Subtle 1px Crystal Edge & Scroll-Reactive Specular Sheen for Dark Mode */
+  /* Subtle 1px Crystal Edge for Dark Mode */
   --mp-glass-rim: linear-gradient(
-    var(--mp-glint-angle, 135deg),
+    135deg,
     rgba(255, 255, 255, 0.32) 0%,
     rgba(255, 255, 255, 0.12) 28%,
     rgba(255, 255, 255, 0.045) 52%,
     rgba(255, 255, 255, 0.12) 78%,
     rgba(255, 255, 255, 0.24) 100%
   );
-  --mp-glass-sheen: linear-gradient(
-    118deg,
-    transparent 0%,
-    transparent 34%,
-    rgba(255, 255, 255, 0.035) 44%,
-    rgba(255, 255, 255, 0.15) 50%,
-    rgba(52, 211, 153, 0.07) 56%,
-    transparent 66%,
-    transparent 100%
-  );
   --mp-glass-rim-control: linear-gradient(
-    var(--mp-glint-angle, 135deg),
+    135deg,
     rgba(255, 255, 255, 0.22) 0%,
     rgba(255, 255, 255, 0.07) 50%,
     rgba(255, 255, 255, 0.16) 100%
@@ -324,10 +301,10 @@ html[data-theme="dark"],
   html[data-theme="light"],
   .home-root.theme-light,
   [data-home-theme="light"] {
-    --mp-glass-blur: blur(5.5px) saturate(1.45) brightness(1.02);
-    --mp-glass-control-blur: blur(3.5px) saturate(1.35);
-    --mp-glass-sticky-blur: blur(8px) saturate(1.55);
-    --mp-glass-modal-blur: blur(11px) saturate(1.55);
+    --mp-glass-blur: blur(2.75px) saturate(1.45) brightness(1.02);
+    --mp-glass-control-blur: blur(1.75px) saturate(1.35);
+    --mp-glass-sticky-blur: blur(4px) saturate(1.55);
+    --mp-glass-modal-blur: blur(5.5px) saturate(1.55);
     --mp-glass-bg: linear-gradient(
       145deg,
       rgba(255, 255, 255, 0.38) 0%,
@@ -353,10 +330,10 @@ html[data-theme="dark"],
   html[data-theme="dark"],
   .home-root.theme-dark,
   [data-home-theme="dark"] {
-    --mp-glass-blur: blur(5px) saturate(1.45);
-    --mp-glass-control-blur: blur(3.5px) saturate(1.35);
-    --mp-glass-sticky-blur: blur(8px) saturate(1.55);
-    --mp-glass-modal-blur: blur(11px) saturate(1.55);
+    --mp-glass-blur: blur(2.5px) saturate(1.45);
+    --mp-glass-control-blur: blur(1.75px) saturate(1.35);
+    --mp-glass-sticky-blur: blur(4px) saturate(1.55);
+    --mp-glass-modal-blur: blur(5.5px) saturate(1.55);
     --mp-glass-bg: linear-gradient(
       145deg,
       rgba(255, 255, 255, 0.08) 0%,
@@ -382,9 +359,9 @@ html[data-theme="dark"],
 
 /* Balanced Crystal Readability When Liquid Image Backdrop Is Active */
 html[data-theme="light"][data-shell-backdrop="liquid-image"] {
-  --mp-glass-blur: blur(6px) saturate(1.45) brightness(1.02);
-  --mp-glass-sticky-blur: blur(9px) saturate(1.55) brightness(1.02);
-  --mp-glass-control-blur: blur(4px) saturate(1.35);
+  --mp-glass-blur: blur(3px) saturate(1.45) brightness(1.02);
+  --mp-glass-sticky-blur: blur(4.5px) saturate(1.55) brightness(1.02);
+  --mp-glass-control-blur: blur(2px) saturate(1.35);
   --mp-glass-bg: rgba(255, 255, 255, 0.34);
   --mp-glass-bg-hover: rgba(255, 255, 255, 0.48);
   --mp-glass-bg-elevated: rgba(255, 255, 255, 0.58);
@@ -395,9 +372,9 @@ html[data-theme="light"][data-shell-backdrop="liquid-image"] {
 }
 
 html[data-theme="dark"][data-shell-backdrop="liquid-image"] {
-  --mp-glass-blur: blur(5.5px) saturate(1.45);
-  --mp-glass-sticky-blur: blur(8px) saturate(1.55);
-  --mp-glass-control-blur: blur(4px) saturate(1.35);
+  --mp-glass-blur: blur(2.75px) saturate(1.45);
+  --mp-glass-sticky-blur: blur(4px) saturate(1.55);
+  --mp-glass-control-blur: blur(2px) saturate(1.35);
   --mp-glass-bg: rgba(14, 24, 28, 0.16);
   --mp-glass-bg-hover: rgba(20, 32, 38, 0.24);
   --mp-glass-bg-elevated: rgba(14, 22, 28, 0.44);
@@ -409,8 +386,8 @@ html[data-theme="dark"][data-shell-backdrop="liquid-image"] {
 
 @media (max-width: 960px), (hover: none) and (pointer: coarse) {
   html[data-theme="light"][data-shell-backdrop="liquid-image"] {
-    --mp-glass-blur: blur(5.5px) saturate(1.45) brightness(1.02);
-    --mp-glass-control-blur: blur(3.5px) saturate(1.35);
+    --mp-glass-blur: blur(2.75px) saturate(1.45) brightness(1.02);
+    --mp-glass-control-blur: blur(1.75px) saturate(1.35);
     --mp-glass-bg: linear-gradient(
       145deg,
       rgba(255, 255, 255, 0.38) 0%,
@@ -421,8 +398,8 @@ html[data-theme="dark"][data-shell-backdrop="liquid-image"] {
   }
 
   html[data-theme="dark"][data-shell-backdrop="liquid-image"] {
-    --mp-glass-blur: blur(5px) saturate(1.45);
-    --mp-glass-control-blur: blur(3.5px) saturate(1.35);
+    --mp-glass-blur: blur(2.5px) saturate(1.45);
+    --mp-glass-control-blur: blur(1.75px) saturate(1.35);
     --mp-glass-bg: linear-gradient(
       145deg,
       rgba(20, 32, 38, 0.20) 0%,
@@ -991,8 +968,8 @@ th {
   z-index: 50;
   background: rgba(255, 255, 255, 0.88);
   border-bottom: 1px solid var(--line);
-  backdrop-filter: blur(18px) saturate(1.15);
-  -webkit-backdrop-filter: blur(18px) saturate(1.15);
+  backdrop-filter: blur(9px) saturate(1.15);
+  -webkit-backdrop-filter: blur(9px) saturate(1.15);
   box-shadow: 0 2px 14px rgba(15, 23, 42, 0.05);
 }
 
@@ -1251,8 +1228,8 @@ th {
   inset: 0;
   z-index: 100500;
   background: rgba(0, 0, 0, 0.78);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1261,8 +1238,8 @@ th {
 
 .ajax-box {
   background: var(--mp-glass-bg-elevated);
-  backdrop-filter: blur(26px) saturate(1.45);
-  -webkit-backdrop-filter: blur(26px) saturate(1.45);
+  backdrop-filter: blur(13px) saturate(1.45);
+  -webkit-backdrop-filter: blur(13px) saturate(1.45);
   color: var(--ink);
   border: 1px solid var(--mp-glass-border);
   border-radius: 22px;
@@ -1704,8 +1681,8 @@ section.s h2 {
 .sidebar,
 .sb {
   background: color-mix(in srgb, var(--surface) 88%, transparent);
-  backdrop-filter: blur(22px) saturate(1.35);
-  -webkit-backdrop-filter: blur(22px) saturate(1.35);
+  backdrop-filter: blur(11px) saturate(1.35);
+  -webkit-backdrop-filter: blur(11px) saturate(1.35);
   border-inline-end: 1px solid var(--line);
   padding: 16px 12px;
   display: flex;
@@ -1840,8 +1817,8 @@ section.s h2 {
   padding: 0 12px;
   margin-bottom: 18px;
   background: color-mix(in srgb, var(--surface) 72%, transparent);
-  backdrop-filter: blur(18px) saturate(1.2);
-  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  backdrop-filter: blur(9px) saturate(1.2);
+  -webkit-backdrop-filter: blur(9px) saturate(1.2);
   border-bottom: 1px solid var(--line);
 }
 
@@ -1849,8 +1826,8 @@ section.s h2 {
 .admin-shell .sb.desktop-only,
 .customer-shell .sb.desktop-only {
   background: color-mix(in srgb, var(--surface) 82%, transparent);
-  backdrop-filter: blur(20px) saturate(1.2);
-  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  backdrop-filter: blur(10px) saturate(1.2);
+  -webkit-backdrop-filter: blur(10px) saturate(1.2);
   border-inline-end: 1px solid var(--line);
 }
 
@@ -1869,8 +1846,8 @@ section.s h2 {
   margin: 0 0 18px;
   border-radius: 14px;
   background: color-mix(in srgb, var(--surface) 24%, transparent);
-  backdrop-filter: blur(18px) saturate(1.3);
-  -webkit-backdrop-filter: blur(18px) saturate(1.3);
+  backdrop-filter: blur(9px) saturate(1.3);
+  -webkit-backdrop-filter: blur(9px) saturate(1.3);
   border: 1px solid var(--line);
   box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
 }
@@ -1940,8 +1917,8 @@ section.s h2 {
   top: calc(100% + 6px);
   inset-inline-end: 0;
   background: color-mix(in srgb, var(--surface) 84%, transparent);
-  backdrop-filter: blur(22px) saturate(1.25);
-  -webkit-backdrop-filter: blur(22px) saturate(1.25);
+  backdrop-filter: blur(11px) saturate(1.25);
+  -webkit-backdrop-filter: blur(11px) saturate(1.25);
   color: var(--ink);
   border: 1px solid var(--line);
   border-radius: 16px;
@@ -2238,8 +2215,8 @@ section.s h2 {
   position: fixed;
   inset: 0;
   background: rgba(15, 23, 42, 0.52);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
   z-index: 9000;
   animation: drawerFade 0.36s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
@@ -2253,8 +2230,8 @@ section.s h2 {
   height: 100dvh;
   width: min(272px, 80vw);
   background: color-mix(in srgb, var(--surface) 90%, transparent);
-  backdrop-filter: blur(24px) saturate(1.4);
-  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  backdrop-filter: blur(12px) saturate(1.4);
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
   color: var(--ink);
   border-inline-end: 1px solid var(--line);
   z-index: 9001;
@@ -2435,7 +2412,7 @@ section.s h2 {
   top: env(safe-area-inset-top, 0px);
   z-index: 35;
   background: color-mix(in srgb, var(--surface) 95%, transparent);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(6px);
   border-bottom: 1px solid var(--line);
   overflow-x: auto;
   white-space: nowrap;
@@ -2590,7 +2567,7 @@ section.s h2 {
   z-index: 42;
   padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
   background: color-mix(in srgb, var(--surface) 95%, transparent);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(6px);
   border-top: 1px solid var(--line);
 }
 
@@ -2608,7 +2585,7 @@ section.s h2 {
   inset: 0;
   z-index: 50;
   background: rgba(0, 0, 0, .55);
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(2px);
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -2750,8 +2727,8 @@ section.s h2 {
   }
 
   .nav {
-    backdrop-filter: blur(18px) saturate(1.15) !important;
-    -webkit-backdrop-filter: blur(18px) saturate(1.15) !important;
+    backdrop-filter: blur(9px) saturate(1.15) !important;
+    -webkit-backdrop-filter: blur(9px) saturate(1.15) !important;
     background: rgba(255, 255, 255, 0.9) !important;
     box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
   }
@@ -2820,8 +2797,8 @@ section.s h2 {
   .pm-topbar,
   .pm-cat-strip-wrap {
     background: var(--pm-bg) !important;
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
+    backdrop-filter: blur(6px) !important;
+    -webkit-backdrop-filter: blur(6px) !important;
     box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
   }
 
@@ -2918,8 +2895,8 @@ section.s h2 {
     -webkit-overflow-scrolling: touch;
     border-bottom: 1px solid var(--line);
     background: color-mix(in srgb, var(--surface) 40%, transparent);
-    backdrop-filter: blur(14px) saturate(1.25);
-    -webkit-backdrop-filter: blur(14px) saturate(1.25);
+    backdrop-filter: blur(7px) saturate(1.25);
+    -webkit-backdrop-filter: blur(7px) saturate(1.25);
     position: sticky;
     top: 56px;
     z-index: 35;
@@ -2937,8 +2914,8 @@ section.s h2 {
     border-radius: 9999px;
     border: 1px solid var(--line);
     background: color-mix(in srgb, var(--surface) 40%, transparent);
-    backdrop-filter: blur(12px) saturate(1.2);
-    -webkit-backdrop-filter: blur(12px) saturate(1.2);
+    backdrop-filter: blur(6px) saturate(1.2);
+    -webkit-backdrop-filter: blur(6px) saturate(1.2);
     color: var(--ink);
     font-size: 13px;
     font-weight: 700;
@@ -2990,8 +2967,8 @@ section.s h2 {
     padding: 7px 10px;
     border-radius: 12px;
     background: color-mix(in srgb, var(--surface) 20%, transparent);
-    backdrop-filter: blur(18px) saturate(1.3);
-    -webkit-backdrop-filter: blur(18px) saturate(1.3);
+    backdrop-filter: blur(9px) saturate(1.3);
+    -webkit-backdrop-filter: blur(9px) saturate(1.3);
     border: 1px solid var(--line);
   }
 
@@ -3648,8 +3625,8 @@ section.s h2 {
   border-radius: 16px;
   border: 1px solid var(--pm-line);
   background: color-mix(in srgb, var(--pm-soft) 72%, transparent);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   color: var(--pm-muted);
   font-size: 13.5px;
   font-weight: 700;
@@ -3698,8 +3675,8 @@ section.s h2 {
 
 .pm-product-row {
   background: color-mix(in srgb, var(--pm-card) 80%, transparent);
-  backdrop-filter: blur(14px) saturate(1.15);
-  -webkit-backdrop-filter: blur(14px) saturate(1.15);
+  backdrop-filter: blur(7px) saturate(1.15);
+  -webkit-backdrop-filter: blur(7px) saturate(1.15);
   border: 1px solid var(--pm-line);
   border-radius: 17px;
   padding: 11px;
@@ -3843,7 +3820,7 @@ section.s h2 {
 
 .pm-fd-card {
   background: var(--pm-card);
-  backdrop-filter: blur(16px);
+  backdrop-filter: blur(8px);
   border: 1px solid var(--pm-line);
   border-radius: 16px;
   padding: 10px 14px;
@@ -3914,8 +3891,8 @@ section.s h2 {
   inset: 0;
   z-index: 9950;
   background: rgba(0, 0, 0, 0.72);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -3931,8 +3908,8 @@ section.s h2 {
 
 .pm-sheet {
   background: color-mix(in srgb, var(--pm-card) 98%, transparent);
-  backdrop-filter: blur(24px) saturate(1.2);
-  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
   border: 1px solid var(--pm-line);
   color: var(--pm-ink);
   color-scheme: dark;
@@ -4020,8 +3997,8 @@ section.s h2 {
   border-radius: 14px;
   border: 1px solid var(--pm-line);
   background: color-mix(in srgb, var(--pm-soft) 76%, transparent);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   color: var(--pm-ink);
   font-size: 14px;
   font-weight: 700;
@@ -4338,8 +4315,8 @@ section.s h2 {
 [data-home-theme="light"] .cartb,
 [data-home-theme="light"] .price {
   background: rgba(255, 255, 255, 0.82);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
   border-color: rgba(15, 118, 110, 0.16);
   box-shadow: 0 8px 24px -10px rgba(15, 23, 42, 0.09);
   color: #0f172a;
@@ -4361,8 +4338,8 @@ section.s h2 {
 
 [data-home-theme="light"] .drawer-panel {
   background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px);
   color: #0f172a;
   border-inline-end: 1px solid #CBD5E1;
 }
@@ -4430,8 +4407,8 @@ html[data-theme="dark"] .home-root[data-home-theme="dark"] .card,
 [data-home-theme="dark"] .cartb,
 [data-home-theme="dark"] .price {
   background: rgba(22, 27, 34, 0.84) !important;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   box-shadow: 0 10px 28px -12px rgba(0, 0, 0, 0.55) !important;
   color: #F8FAFC !important;
@@ -4455,8 +4432,8 @@ html[data-theme="dark"] .home-root[data-home-theme="dark"] .card:hover,
 
 [data-home-theme="dark"] .drawer-panel {
   background: rgba(22, 27, 34, 0.94);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px);
   color: #F8FAFC;
   border-inline-end: 1px solid rgba(255, 255, 255, 0.12);
 }
@@ -4494,8 +4471,8 @@ html[data-theme="light"] .brand {
 
 html[data-theme="light"] .card {
   background: var(--mp-glass-bg) !important;
-  backdrop-filter: blur(20px) saturate(1.35) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(1.35) !important;
+  backdrop-filter: blur(10px) saturate(1.35) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(1.35) !important;
   color: #0F172A !important;
   border: 1px solid var(--mp-glass-border) !important;
   box-shadow: var(--mp-glass-shadow) !important;
@@ -4510,8 +4487,8 @@ html[data-theme="light"] input:not([type=checkbox]):not([type=radio]):not([type=
 html[data-theme="light"] select,
 html[data-theme="light"] textarea {
   background: var(--mp-glass-control) !important;
-  backdrop-filter: blur(12px) saturate(1.25);
-  -webkit-backdrop-filter: blur(12px) saturate(1.25);
+  backdrop-filter: blur(6px) saturate(1.25);
+  -webkit-backdrop-filter: blur(6px) saturate(1.25);
   border-color: rgba(148, 163, 184, 0.42) !important;
   color: #0F172A !important;
 }
@@ -4542,8 +4519,8 @@ html[data-theme="light"] label.f {
 
 html[data-theme="light"] .btn:not(.p):not(.d) {
   background: var(--mp-glass-control) !important;
-  backdrop-filter: blur(12px) saturate(1.25);
-  -webkit-backdrop-filter: blur(12px) saturate(1.25);
+  backdrop-filter: blur(6px) saturate(1.25);
+  -webkit-backdrop-filter: blur(6px) saturate(1.25);
   color: #0F172A !important;
   border: 1px solid rgba(148, 163, 184, 0.40) !important;
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
@@ -4582,8 +4559,8 @@ html[data-theme="light"] .sb,
 html[data-theme="light"] .admin-shell .sb.desktop-only,
 html[data-theme="light"] .customer-shell .sb.desktop-only {
   background: rgba(255, 255, 255, 0.88) !important;
-  backdrop-filter: blur(22px) saturate(1.35) !important;
-  -webkit-backdrop-filter: blur(22px) saturate(1.35) !important;
+  backdrop-filter: blur(11px) saturate(1.35) !important;
+  -webkit-backdrop-filter: blur(11px) saturate(1.35) !important;
   border-inline-end: 1px solid rgba(15, 23, 42, 0.09) !important;
   box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04) !important;
   color: #0F172A !important;
@@ -4618,8 +4595,8 @@ html[data-theme="light"] .app-topbar,
 html[data-theme="light"] .admin-shell .app-topbar,
 html[data-theme="light"] .customer-shell .app-topbar {
   background: rgba(255, 255, 255, 0.45) !important;
-  backdrop-filter: blur(18px) saturate(1.35) !important;
-  -webkit-backdrop-filter: blur(18px) saturate(1.35) !important;
+  backdrop-filter: blur(9px) saturate(1.35) !important;
+  -webkit-backdrop-filter: blur(9px) saturate(1.35) !important;
   border-color: rgba(148, 163, 184, 0.34) !important;
   box-shadow: 0 2px 12px rgba(15, 23, 42, 0.05) !important;
 }
@@ -4629,22 +4606,22 @@ html[data-theme="light"] .topbar-badge-pill,
 html[data-theme="light"] .topbar-profile-btn,
 html[data-theme="light"] .profile-popover {
   background: rgba(255, 255, 255, 0.86) !important;
-  backdrop-filter: blur(18px) saturate(1.3) !important;
-  -webkit-backdrop-filter: blur(18px) saturate(1.3) !important;
+  backdrop-filter: blur(9px) saturate(1.3) !important;
+  -webkit-backdrop-filter: blur(9px) saturate(1.3) !important;
   border-color: rgba(148, 163, 184, 0.38) !important;
   color: #0F172A !important;
 }
 
 html[data-theme="light"] .drawer-backdrop {
   background: rgba(15, 23, 42, 0.45);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
 }
 
 html[data-theme="light"] .drawer-panel {
   background: rgba(255, 255, 255, 0.90) !important;
-  backdrop-filter: blur(24px) saturate(1.4) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(1.4) !important;
+  backdrop-filter: blur(12px) saturate(1.4) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(1.4) !important;
   color: #0F172A !important;
   border-inline-end: 1px solid rgba(15, 23, 42, 0.10) !important;
   box-shadow: 0 14px 42px rgba(15, 23, 42, 0.16) !important;
@@ -4652,8 +4629,8 @@ html[data-theme="light"] .drawer-panel {
 
 html[data-theme="light"] .ajax-box {
   background: var(--mp-glass-bg-elevated) !important;
-  backdrop-filter: blur(26px) saturate(1.45) !important;
-  -webkit-backdrop-filter: blur(26px) saturate(1.45) !important;
+  backdrop-filter: blur(13px) saturate(1.45) !important;
+  -webkit-backdrop-filter: blur(13px) saturate(1.45) !important;
   color: #0F172A !important;
   border: 1px solid var(--mp-glass-border) !important;
   box-shadow: 0 20px 50px rgba(15, 23, 42, 0.18) !important;
@@ -4718,8 +4695,8 @@ html[data-theme="dark"] input:not([type=checkbox]):not([type=radio]):not([type=c
 html[data-theme="dark"] select,
 html[data-theme="dark"] textarea {
   background: var(--mp-glass-control) !important;
-  backdrop-filter: blur(14px) saturate(1.25);
-  -webkit-backdrop-filter: blur(14px) saturate(1.25);
+  backdrop-filter: blur(7px) saturate(1.25);
+  -webkit-backdrop-filter: blur(7px) saturate(1.25);
   border-color: var(--mp-glass-border) !important;
   color: #F8FAFC !important;
 }
@@ -4735,8 +4712,8 @@ html[data-theme="dark"] label.f {
 
 html[data-theme="dark"] .btn:not(.p):not(.d) {
   background: var(--mp-glass-control) !important;
-  backdrop-filter: blur(14px) saturate(1.25);
-  -webkit-backdrop-filter: blur(14px) saturate(1.25);
+  backdrop-filter: blur(7px) saturate(1.25);
+  -webkit-backdrop-filter: blur(7px) saturate(1.25);
   color: #F8FAFC !important;
   border: 1px solid var(--mp-glass-border) !important;
 }
@@ -4779,8 +4756,8 @@ html[data-theme="dark"] .sb,
 html[data-theme="dark"] .admin-shell .sb.desktop-only,
 html[data-theme="dark"] .customer-shell .sb.desktop-only {
   background: rgba(19, 24, 32, 0.88) !important;
-  backdrop-filter: blur(22px) saturate(1.35) !important;
-  -webkit-backdrop-filter: blur(22px) saturate(1.35) !important;
+  backdrop-filter: blur(11px) saturate(1.35) !important;
+  -webkit-backdrop-filter: blur(11px) saturate(1.35) !important;
   border-inline-end: 1px solid rgba(255, 255, 255, 0.10) !important;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.28) !important;
   color: #F8FAFC !important;
@@ -4788,14 +4765,14 @@ html[data-theme="dark"] .customer-shell .sb.desktop-only {
 
 html[data-theme="dark"] .drawer-backdrop {
   background: rgba(2, 6, 23, 0.64);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
 }
 
 html[data-theme="dark"] .drawer-panel {
   background: rgba(19, 24, 32, 0.91) !important;
-  backdrop-filter: blur(24px) saturate(1.4) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(1.4) !important;
+  backdrop-filter: blur(12px) saturate(1.4) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(1.4) !important;
   border-inline-end: 1px solid rgba(255, 255, 255, 0.12) !important;
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.58) !important;
   color: #F8FAFC !important;
@@ -4803,8 +4780,8 @@ html[data-theme="dark"] .drawer-panel {
 
 html[data-theme="dark"] .ajax-box {
   background: var(--mp-glass-bg-elevated) !important;
-  backdrop-filter: blur(26px) saturate(1.45) !important;
-  -webkit-backdrop-filter: blur(26px) saturate(1.45) !important;
+  backdrop-filter: blur(13px) saturate(1.45) !important;
+  -webkit-backdrop-filter: blur(13px) saturate(1.45) !important;
   border-color: var(--mp-glass-border) !important;
   color: #F8FAFC !important;
 }
@@ -4838,8 +4815,8 @@ html[data-theme="dark"] .app-topbar,
 html[data-theme="dark"] .admin-shell .app-topbar,
 html[data-theme="dark"] .customer-shell .app-topbar {
   background: linear-gradient(155deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%) !important;
-  backdrop-filter: blur(20px) saturate(1.35) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(1.35) !important;
+  backdrop-filter: blur(10px) saturate(1.35) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(1.35) !important;
   border-color: var(--mp-glass-border) !important;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
   color: #F8FAFC !important;
@@ -4850,8 +4827,8 @@ html[data-theme="dark"] .topbar-badge-pill,
 html[data-theme="dark"] .topbar-profile-btn,
 html[data-theme="dark"] .profile-popover {
   background: rgba(255, 255, 255, 0.07) !important;
-  backdrop-filter: blur(18px) saturate(1.3) !important;
-  -webkit-backdrop-filter: blur(18px) saturate(1.3) !important;
+  backdrop-filter: blur(9px) saturate(1.3) !important;
+  -webkit-backdrop-filter: blur(9px) saturate(1.3) !important;
   border-color: var(--mp-glass-border) !important;
   color: #F8FAFC !important;
 }
@@ -6261,8 +6238,8 @@ html[data-theme="dark"] .mp-action-danger-btn.is-restore {
 html[data-theme="dark"] .mp-admin-settings-sections .mp-framed-box,
 html[data-theme="light"] .mp-admin-settings-sections .mp-framed-box {
   background: color-mix(in srgb, var(--surface) 40%, transparent) !important;
-  backdrop-filter: blur(14px) saturate(1.25) !important;
-  -webkit-backdrop-filter: blur(14px) saturate(1.25) !important;
+  backdrop-filter: blur(7px) saturate(1.25) !important;
+  -webkit-backdrop-filter: blur(7px) saturate(1.25) !important;
   border: 1px solid color-mix(in srgb, var(--line) 72%, transparent) !important;
   border-radius: 15px !important;
   padding: 18px 20px !important;
@@ -7498,8 +7475,8 @@ html[data-theme="dark"] .mp-dash-topbar-btn.is-primary {
   border-radius: 18px;
   border: 1px solid var(--mp-glass-border);
   background: var(--mp-glass-bg);
-  backdrop-filter: blur(20px) saturate(1.35);
-  -webkit-backdrop-filter: blur(20px) saturate(1.35);
+  backdrop-filter: blur(10px) saturate(1.35);
+  -webkit-backdrop-filter: blur(10px) saturate(1.35);
   box-shadow: var(--mp-glass-shadow);
   color: var(--ink);
   text-align: right;
@@ -7705,8 +7682,8 @@ html[data-theme="dark"] .mp-dash-topbar-btn.is-primary {
   padding: 6px 14px;
   border-radius: 20px;
   background: var(--mp-glass-bg);
-  backdrop-filter: blur(20px) saturate(1.35);
-  -webkit-backdrop-filter: blur(20px) saturate(1.35);
+  backdrop-filter: blur(10px) saturate(1.35);
+  -webkit-backdrop-filter: blur(10px) saturate(1.35);
   border: 1px solid var(--mp-glass-border);
   box-shadow: var(--mp-glass-shadow);
   direction: rtl;
@@ -7883,8 +7860,8 @@ html[data-theme="light"] .btn.s.mp-home-tip-btn.is-done {
   padding: 0 15px;
   border: 1px solid var(--mp-glass-border);
   background: var(--mp-glass-control);
-  backdrop-filter: blur(12px) saturate(1.25);
-  -webkit-backdrop-filter: blur(12px) saturate(1.25);
+  backdrop-filter: blur(6px) saturate(1.25);
+  -webkit-backdrop-filter: blur(6px) saturate(1.25);
   color: var(--muted);
   display: inline-flex;
   align-items: center;
@@ -7946,8 +7923,8 @@ html[data-theme="dark"] .mp-items-count-box {
   border-radius: 12px;
   border: 1px solid var(--mp-glass-border);
   background: var(--mp-glass-control);
-  backdrop-filter: blur(12px) saturate(1.25);
-  -webkit-backdrop-filter: blur(12px) saturate(1.25);
+  backdrop-filter: blur(6px) saturate(1.25);
+  -webkit-backdrop-filter: blur(6px) saturate(1.25);
   color: var(--ink);
   display: inline-grid;
   place-items: center;
@@ -7978,8 +7955,8 @@ html[data-theme="dark"] .mp-items-count-box {
   border-radius: 14px;
   border: 1.5px solid color-mix(in srgb, var(--brand) 55%, var(--mp-glass-border));
   background: var(--mp-glass-bg);
-  backdrop-filter: blur(18px) saturate(1.3);
-  -webkit-backdrop-filter: blur(18px) saturate(1.3);
+  backdrop-filter: blur(9px) saturate(1.3);
+  -webkit-backdrop-filter: blur(9px) saturate(1.3);
   box-shadow: var(--mp-glass-shadow);
   box-sizing: border-box;
 }
@@ -8412,8 +8389,8 @@ html[data-theme="dark"] .mp-items-count-box {
   padding: 4px;
   border-radius: 14px;
   background: var(--mp-glass-bg);
-  backdrop-filter: blur(18px) saturate(1.3);
-  -webkit-backdrop-filter: blur(18px) saturate(1.3);
+  backdrop-filter: blur(9px) saturate(1.3);
+  -webkit-backdrop-filter: blur(9px) saturate(1.3);
   border: 1px solid var(--mp-glass-border);
   box-shadow: var(--mp-glass-shadow);
   width: 100%;
@@ -8462,8 +8439,8 @@ html[data-theme="dark"] .mp-items-count-box {
 
 .mp-order-row {
   background: var(--mp-glass-bg);
-  backdrop-filter: blur(20px) saturate(1.35);
-  -webkit-backdrop-filter: blur(20px) saturate(1.35);
+  backdrop-filter: blur(10px) saturate(1.35);
+  -webkit-backdrop-filter: blur(10px) saturate(1.35);
   border: 1px solid var(--mp-glass-border);
   box-shadow: var(--mp-glass-shadow);
   color: var(--ink);
@@ -8649,8 +8626,8 @@ html[data-theme="dark"] .mp-items-count-box {
   inset: 0;
   z-index: 99999;
   background: rgba(0, 0, 0, 0.58);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(2.5px);
+  -webkit-backdrop-filter: blur(2.5px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -8850,8 +8827,8 @@ html[data-theme="dark"] .mp-items-count-box {
   flex-direction: column;
   border-radius: 22px;
   background: var(--mp-glass-bg-elevated);
-  backdrop-filter: blur(24px) saturate(1.4);
-  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  backdrop-filter: blur(12px) saturate(1.4);
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
   border: 1px solid var(--mp-glass-border);
   overflow: hidden;
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
@@ -9401,8 +9378,8 @@ html[data-theme="dark"] .mp-items-count-box {
   width: 100%;
   max-width: 460px;
   background: var(--mp-glass-bg);
-  backdrop-filter: blur(20px) saturate(1.35);
-  -webkit-backdrop-filter: blur(20px) saturate(1.35);
+  backdrop-filter: blur(10px) saturate(1.35);
+  -webkit-backdrop-filter: blur(10px) saturate(1.35);
   border: 1px solid var(--mp-glass-border);
   box-shadow: var(--mp-glass-shadow);
 }
@@ -9434,8 +9411,8 @@ html[data-theme="dark"] .mp-items-count-box {
 .mp-appearance-mode-btn.active {
   opacity: 1;
   background: color-mix(in srgb, var(--brand) 24%, rgba(255, 255, 255, 0.1));
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   color: var(--ink);
   border-color: color-mix(in srgb, var(--brand) 55%, rgba(255, 255, 255, 0.24));
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 4px 12px color-mix(in srgb, var(--brand) 16%, transparent);
@@ -9458,8 +9435,8 @@ html[data-theme="dark"] .mp-items-count-box {
   border-radius: 18px;
   border: 1px solid var(--mp-glass-border);
   background: var(--mp-glass-bg);
-  backdrop-filter: blur(20px) saturate(1.35);
-  -webkit-backdrop-filter: blur(20px) saturate(1.35);
+  backdrop-filter: blur(10px) saturate(1.35);
+  -webkit-backdrop-filter: blur(10px) saturate(1.35);
   box-shadow: var(--mp-glass-shadow);
   text-align: start;
   cursor: pointer;
@@ -9488,8 +9465,8 @@ html[data-theme="dark"] .mp-items-count-box {
   border-radius: 18px;
   border: 1px solid var(--mp-glass-border);
   background: var(--mp-glass-bg);
-  backdrop-filter: blur(20px) saturate(1.35);
-  -webkit-backdrop-filter: blur(20px) saturate(1.35);
+  backdrop-filter: blur(10px) saturate(1.35);
+  -webkit-backdrop-filter: blur(10px) saturate(1.35);
   box-shadow: var(--mp-glass-shadow);
   text-align: start;
   cursor: pointer;
@@ -9611,8 +9588,8 @@ html[data-theme="dark"] .mp-items-count-box {
   border-radius: 18px;
   border: 1px solid var(--mp-glass-border);
   background: var(--mp-glass-bg);
-  backdrop-filter: blur(20px) saturate(1.35);
-  -webkit-backdrop-filter: blur(20px) saturate(1.35);
+  backdrop-filter: blur(10px) saturate(1.35);
+  -webkit-backdrop-filter: blur(10px) saturate(1.35);
   box-shadow: var(--mp-glass-shadow);
   text-align: start;
   cursor: pointer;
@@ -9717,7 +9694,7 @@ html[data-theme="dark"] .mp-items-count-box {
 .mp-shape-preview-glass .mp-shape-mini-banner,
 .mp-shape-preview-glass .mp-shape-preview-box {
   background: color-mix(in srgb, var(--surface) 45%, transparent);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(4px);
   border-color: rgba(255, 255, 255, 0.28);
   border-radius: 10px;
 }
@@ -10012,15 +9989,15 @@ html[data-theme="dark"] .mp-items-count-box {
 .pm-page[data-shape='glass'] .pm-topbar,
 .pm-page[data-shape='glass'] .pm-owner-preview-bar {
   background: color-mix(in srgb, var(--pm-card) 58%, transparent);
-  backdrop-filter: blur(20px) saturate(1.4);
-  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  backdrop-filter: blur(10px) saturate(1.4);
+  -webkit-backdrop-filter: blur(10px) saturate(1.4);
   border-bottom: 1px solid color-mix(in srgb, var(--pm-ink) 16%, transparent);
 }
 
 .pm-page[data-shape='glass'] .pm-cat-strip-wrap {
   background: color-mix(in srgb, var(--pm-bg) 56%, transparent);
-  backdrop-filter: blur(18px) saturate(1.4);
-  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  backdrop-filter: blur(9px) saturate(1.4);
+  -webkit-backdrop-filter: blur(9px) saturate(1.4);
 }
 
 .pm-page[data-shape='glass'] .pm-hero-carousel {
@@ -10043,8 +10020,8 @@ html[data-theme="dark"] .mp-items-count-box {
 .pm-page[data-shape='glass'] .pm-fd-card,
 .pm-page[data-shape='glass'] .pm-sheet {
   background: color-mix(in srgb, var(--pm-card) 54%, transparent) !important;
-  backdrop-filter: blur(20px) saturate(1.45);
-  -webkit-backdrop-filter: blur(20px) saturate(1.45);
+  backdrop-filter: blur(10px) saturate(1.45);
+  -webkit-backdrop-filter: blur(10px) saturate(1.45);
   border: 1px solid color-mix(in srgb, var(--pm-ink) 18%, transparent) !important;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 10px 28px rgba(0, 0, 0, 0.22) !important;
 }
@@ -10054,8 +10031,8 @@ html[data-theme="dark"] .mp-items-count-box {
 .pm-page[data-shape='glass'] .pm-cat-chip:not(.active),
 .pm-page[data-shape='glass'] .pm-filter-chip:not(.active) {
   background: color-mix(in srgb, var(--pm-soft) 52%, transparent) !important;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   border-color: color-mix(in srgb, var(--pm-ink) 18%, transparent) !important;
 }
 
@@ -10166,8 +10143,8 @@ html[data-theme="dark"] .mp-items-count-box {
 .pm-page[data-shape='dreamy'] .pm-owner-preview-bar,
 .pm-page[data-shape='dreamy'] .pm-cat-strip-wrap {
   background: color-mix(in srgb, var(--pm-card) 72%, transparent);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px);
   border-bottom-color: color-mix(in srgb, var(--pm-brand) 24%, rgba(192, 132, 252, 0.25));
 }
 
@@ -10426,8 +10403,8 @@ html[data-theme="dark"] .mp-items-count-box {
 .pm-page[data-shape='silk'] .pm-owner-preview-bar,
 .pm-page[data-shape='silk'] .pm-cat-strip-wrap {
   background: color-mix(in srgb, var(--pm-card) 82%, transparent);
-  backdrop-filter: blur(18px) saturate(1.25);
-  -webkit-backdrop-filter: blur(18px) saturate(1.25);
+  backdrop-filter: blur(9px) saturate(1.25);
+  -webkit-backdrop-filter: blur(9px) saturate(1.25);
   border-bottom-color: color-mix(in srgb, var(--pm-brand) 16%, var(--pm-line));
 }
 
@@ -10514,8 +10491,8 @@ html[data-theme="dark"] .mp-items-count-box {
 .pm-page[data-shape='editorial'] .pm-owner-preview-bar,
 .pm-page[data-shape='editorial'] .pm-cat-strip-wrap {
   background: color-mix(in srgb, var(--pm-card) 92%, transparent);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   border-bottom: 1px solid color-mix(in srgb, var(--pm-ink) 14%, transparent);
 }
 
@@ -10686,8 +10663,8 @@ html[data-theme="dark"] .mp-items-count-box {
 .pm-page[data-shape='luxe'] .pm-owner-preview-bar,
 .pm-page[data-shape='luxe'] .pm-cat-strip-wrap {
   background: color-mix(in srgb, var(--pm-bg) 88%, transparent);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-bottom-color: color-mix(in srgb, var(--pm-ink) 9%, transparent);
   box-shadow: none;
 }
@@ -11156,8 +11133,8 @@ html[data-theme="dark"] .mp-items-count-box {
   border-radius: 16px;
   border: 1px solid color-mix(in srgb, var(--brand) 36%, var(--mp-glass-border));
   background: var(--mp-glass-bg);
-  backdrop-filter: blur(20px) saturate(1.35);
-  -webkit-backdrop-filter: blur(20px) saturate(1.35);
+  backdrop-filter: blur(10px) saturate(1.35);
+  -webkit-backdrop-filter: blur(10px) saturate(1.35);
   box-shadow: var(--mp-glass-shadow);
 }
 
@@ -11292,8 +11269,8 @@ html[data-theme="light"] .mp-sb-branch-select {
 .mp-addon-square-card {
   aspect-ratio: 1 / 1;
   background: var(--mp-glass-bg);
-  backdrop-filter: blur(20px) saturate(1.35);
-  -webkit-backdrop-filter: blur(20px) saturate(1.35);
+  backdrop-filter: blur(10px) saturate(1.35);
+  -webkit-backdrop-filter: blur(10px) saturate(1.35);
   border: 1px solid var(--mp-glass-border);
   box-shadow: var(--mp-glass-shadow);
   border-radius: 20px;
@@ -11551,8 +11528,8 @@ html[data-theme="light"] .mp-sb-branch-select {
   justify-content: center;
   padding: 16px;
   background: rgba(2, 6, 23, 0.72);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 }
 
 .mp-addon-modal-card,
@@ -11562,8 +11539,8 @@ html[data-theme="light"] .mp-sb-branch-select {
   border-radius: 22px;
   border: 1px solid var(--mp-glass-border);
   background: var(--mp-glass-bg-elevated);
-  backdrop-filter: blur(26px) saturate(1.4);
-  -webkit-backdrop-filter: blur(26px) saturate(1.4);
+  backdrop-filter: blur(13px) saturate(1.4);
+  -webkit-backdrop-filter: blur(13px) saturate(1.4);
   color: var(--ink);
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.44);
   display: flex;
@@ -12433,8 +12410,8 @@ html[data-theme="light"] .mp-addon-endday-badge {
   border-radius: 18px !important;
   border: 1.5px solid rgba(56, 189, 248, 0.45) !important;
   box-shadow: 0 10px 28px rgba(56, 189, 248, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 }
 
 .pm-page[data-shape='newyear'] .pm-cat-chip.active,
@@ -12508,8 +12485,8 @@ html[data-theme="light"] .mp-addon-endday-badge {
 /* ========================================================================= */
 .mp-auth-glass-card {
   background: rgba(255, 255, 255, 0.34);
-  backdrop-filter: blur(18px) saturate(1.4);
-  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  backdrop-filter: blur(9px) saturate(1.4);
+  -webkit-backdrop-filter: blur(9px) saturate(1.4);
   border: 1px solid rgba(15, 118, 110, 0.16);
   box-shadow: 0 20px 48px -14px rgba(15, 23, 42, 0.11), inset 0 1px 0 rgba(255, 255, 255, 0.72);
   color: #0f172a;
@@ -12517,8 +12494,8 @@ html[data-theme="light"] .mp-addon-endday-badge {
 
 [data-home-theme="dark"] .mp-auth-glass-card {
   background: rgba(15, 24, 30, 0.24);
-  backdrop-filter: blur(14px) saturate(1.45);
-  -webkit-backdrop-filter: blur(14px) saturate(1.45);
+  backdrop-filter: blur(7px) saturate(1.45);
+  -webkit-backdrop-filter: blur(7px) saturate(1.45);
   border: 1px solid rgba(255, 255, 255, 0.13);
   box-shadow: 0 20px 50px -14px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.08);
   color: #F8FAFC;
@@ -12529,8 +12506,8 @@ html[data-theme] .mp-auth-glass-card select {
   background: rgba(255, 255, 255, 0.56) !important;
   border: 1px solid rgba(15, 23, 42, 0.14) !important;
   color: #0F172A !important;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 }
 
 html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card input:not([type=checkbox]):not([type=radio]),
@@ -12570,8 +12547,8 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
 .mp-appearance-shape-card:not(.selected),
 .mp-custom-color-chip {
   background: var(--mp-glass-bg) !important;
-  backdrop-filter: blur(20px) saturate(1.35);
-  -webkit-backdrop-filter: blur(20px) saturate(1.35);
+  backdrop-filter: blur(10px) saturate(1.35);
+  -webkit-backdrop-filter: blur(10px) saturate(1.35);
   border-color: var(--mp-glass-border) !important;
   box-shadow: var(--mp-glass-shadow);
 }
@@ -12963,8 +12940,8 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.35);
   background: color-mix(in srgb, var(--pm-card) 88%, transparent);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   color: var(--pm-ink);
   display: inline-grid;
   place-items: center;
@@ -12983,8 +12960,8 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.35);
   background: color-mix(in srgb, var(--pm-card) 90%, transparent);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   color: var(--pm-ink);
   font-size: 12.5px;
   font-weight: 800;
@@ -13323,7 +13300,7 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
   inset: 0;
   z-index: 1200;
   background: rgba(15, 23, 42, 0.56);
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(1px);
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -13553,7 +13530,7 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
   padding: 8px 14px;
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.18);
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(3px);
   flex-shrink: 0;
 }
 
@@ -14492,8 +14469,8 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
 
 .mp-stats-filter-card {
   background: var(--mp-glass-bg);
-  backdrop-filter: blur(20px) saturate(1.35);
-  -webkit-backdrop-filter: blur(20px) saturate(1.35);
+  backdrop-filter: blur(10px) saturate(1.35);
+  -webkit-backdrop-filter: blur(10px) saturate(1.35);
   border: 1px solid var(--mp-glass-border);
   box-shadow: var(--mp-glass-shadow);
   border-radius: 20px;
@@ -14621,8 +14598,8 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
 
 .mp-stats-hero-card {
   background: var(--mp-glass-bg);
-  backdrop-filter: blur(20px) saturate(1.35);
-  -webkit-backdrop-filter: blur(20px) saturate(1.35);
+  backdrop-filter: blur(10px) saturate(1.35);
+  -webkit-backdrop-filter: blur(10px) saturate(1.35);
   border: 1px solid color-mix(in srgb, var(--brand) 34%, var(--mp-glass-border));
   box-shadow: var(--mp-glass-shadow);
   border-radius: 20px;
@@ -14701,8 +14678,8 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
 
 .mp-stats-kpi-tile {
   background: var(--mp-glass-bg);
-  backdrop-filter: blur(20px) saturate(1.35);
-  -webkit-backdrop-filter: blur(20px) saturate(1.35);
+  backdrop-filter: blur(10px) saturate(1.35);
+  -webkit-backdrop-filter: blur(10px) saturate(1.35);
   border: 1px solid var(--mp-glass-border);
   box-shadow: var(--mp-glass-shadow);
   border-radius: 18px;
@@ -14756,8 +14733,8 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
 
 .mp-stats-panel {
   background: var(--mp-glass-bg);
-  backdrop-filter: blur(20px) saturate(1.35);
-  -webkit-backdrop-filter: blur(20px) saturate(1.35);
+  backdrop-filter: blur(10px) saturate(1.35);
+  -webkit-backdrop-filter: blur(10px) saturate(1.35);
   border: 1px solid var(--mp-glass-border);
   box-shadow: var(--mp-glass-shadow);
   border-radius: 20px;
@@ -15085,8 +15062,8 @@ html[data-theme="dark"] .mp-set2-page {
 .mp-set2-page textarea,
 .mp-set2-page select {
   background: var(--set-glass-control) !important;
-  backdrop-filter: blur(14px) saturate(1.25);
-  -webkit-backdrop-filter: blur(14px) saturate(1.25);
+  backdrop-filter: blur(7px) saturate(1.25);
+  -webkit-backdrop-filter: blur(7px) saturate(1.25);
   border: 1px solid var(--set-glass-border) !important;
   border-radius: 12px !important;
   color: var(--ink) !important;
@@ -15118,8 +15095,8 @@ html[data-theme="dark"] .mp-set2-page {
 
 .mp-set2-page .btn.s:not(.p):not(.d) {
   background: var(--set-glass-control) !important;
-  backdrop-filter: blur(12px) saturate(1.25);
-  -webkit-backdrop-filter: blur(12px) saturate(1.25);
+  backdrop-filter: blur(6px) saturate(1.25);
+  -webkit-backdrop-filter: blur(6px) saturate(1.25);
   border: 1px solid var(--set-glass-border) !important;
   color: var(--ink) !important;
 }
@@ -15131,8 +15108,8 @@ html[data-theme="dark"] .mp-set2-page {
 
 .mp-set2-page .btn.p:not(.d) {
   background: color-mix(in srgb, var(--brand) 90%, transparent) !important;
-  backdrop-filter: blur(10px) saturate(1.25);
-  -webkit-backdrop-filter: blur(10px) saturate(1.25);
+  backdrop-filter: blur(5px) saturate(1.25);
+  -webkit-backdrop-filter: blur(5px) saturate(1.25);
   border: 1px solid rgba(255, 255, 255, 0.22) !important;
   color: #ffffff !important;
   box-shadow: 0 6px 18px color-mix(in srgb, var(--brand) 22%, transparent);
@@ -15142,25 +15119,25 @@ html[data-theme="dark"] .mp-set2-page {
   background: var(--set-glass-danger-bg) !important;
   border: 1px solid var(--set-glass-danger-border) !important;
   color: var(--set-glass-danger-ink) !important;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(4px);
 }
 
 .mp-set2-page .mp-theme-icon-switch {
   background: var(--set-glass-control);
   border: 1px solid var(--set-glass-border);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 }
 
 .mp-set2-page .mp-inline-status {
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 }
 
 .mp-set2-tabs-bar {
   background: var(--set-glass-panel);
-  backdrop-filter: blur(20px) saturate(1.35);
-  -webkit-backdrop-filter: blur(20px) saturate(1.35);
+  backdrop-filter: blur(10px) saturate(1.35);
+  -webkit-backdrop-filter: blur(10px) saturate(1.35);
   border: 1px solid var(--set-glass-border);
   box-shadow: var(--mp-glass-shadow);
   border-radius: 16px;
@@ -15222,8 +15199,8 @@ html[data-theme="dark"] .mp-set2-page {
 
 .mp-set2-hero {
   background: var(--set-glass-panel);
-  backdrop-filter: blur(20px) saturate(1.35);
-  -webkit-backdrop-filter: blur(20px) saturate(1.35);
+  backdrop-filter: blur(10px) saturate(1.35);
+  -webkit-backdrop-filter: blur(10px) saturate(1.35);
   border: 1px solid color-mix(in srgb, var(--brand) 32%, var(--set-glass-border));
   box-shadow: var(--mp-glass-shadow);
   border-radius: 20px;
@@ -15272,8 +15249,8 @@ html[data-theme="dark"] .mp-set2-page {
 
 .mp-set2-panel {
   background: var(--set-glass-panel);
-  backdrop-filter: blur(22px) saturate(1.38);
-  -webkit-backdrop-filter: blur(22px) saturate(1.38);
+  backdrop-filter: blur(11px) saturate(1.38);
+  -webkit-backdrop-filter: blur(11px) saturate(1.38);
   border: 1px solid var(--set-glass-border);
   box-shadow: var(--mp-glass-shadow);
   border-radius: 20px;
@@ -15391,8 +15368,8 @@ html[data-theme="dark"] .mp-set2-page {
   cursor: pointer;
   border: 1px solid var(--set-glass-border);
   background: var(--set-glass-control);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   gap: 12px;
@@ -15455,8 +15432,8 @@ html[data-theme="dark"] .mp-set2-page {
 .mp-set2-type-card {
   border: 1px solid var(--set-glass-border);
   background: var(--set-glass-control);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   border-radius: 14px;
   padding: 15px 16px;
   cursor: pointer;
@@ -15699,8 +15676,8 @@ html[data-theme="dark"] .mp-set2-page {
   border-radius: 10px;
   border: 1px solid var(--set-glass-danger-border);
   background: var(--set-glass-danger-bg);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   color: var(--set-glass-danger-ink);
   font-family: inherit;
   font-size: 13.5px;
@@ -15773,8 +15750,8 @@ html[data-theme="dark"] .mp-set2-page {
   border-radius: 11px;
   border: 1px solid var(--set-glass-danger-border);
   background: var(--set-glass-danger-bg);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   color: var(--set-glass-danger-ink);
   display: grid;
   place-items: center;
@@ -15789,8 +15766,8 @@ html[data-theme="dark"] .mp-set2-page {
   gap: 6px;
   min-height: 42px;
   background: var(--set-glass-control);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   color: var(--brand-ink, #34D399);
   border: 1px solid var(--set-glass-border);
   border-radius: 11px;
@@ -15924,8 +15901,8 @@ html[data-theme="dark"] .mp-set2-page {
   align-items: center;
   width: 100%;
   background: var(--set-glass-control);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   border: 1px solid color-mix(in srgb, var(--brand) 38%, var(--set-glass-border));
   border-radius: 12px;
   overflow: hidden;
@@ -16436,7 +16413,7 @@ html[data-theme="dark"] .mp-set2-page {
   top: 0;
   z-index: 45;
   background: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(6px);
   border-bottom: 1px solid #eaeaea;
 }
 
@@ -17103,7 +17080,7 @@ html[data-theme="dark"] .mp-set2-page {
   margin-bottom: 8px;
   padding: 4px 10px;
   background: rgba(255, 255, 255, 0.16);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(4px);
   border-radius: 4px;
   font-size: 12px;
   font-weight: 700;
@@ -17165,7 +17142,7 @@ html[data-theme="dark"] .mp-set2-page {
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(3px);
 }
 
 .mp-bg-btn-outline-light:hover {
@@ -17575,7 +17552,7 @@ html[data-theme="dark"] .mp-set2-page {
   justify-content: center;
   gap: 6px;
   cursor: pointer;
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(3px);
   transition: background-color 0.16s ease;
 }
 
@@ -18454,7 +18431,7 @@ html[data-theme="dark"] .mp-set2-page {
     height: 58px;
     padding-bottom: env(safe-area-inset-bottom);
     background: rgba(255, 255, 255, 0.96);
-    backdrop-filter: blur(14px);
+    backdrop-filter: blur(7px);
     border-top: 1px solid #eaeaea;
     z-index: 48;
   }
@@ -18819,8 +18796,8 @@ html[data-theme="dark"] .mp-set2-page {
   inset: 0;
   z-index: 100600;
   background: rgba(2, 6, 23, 0.72);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -19420,8 +19397,8 @@ html[data-theme] .home-root .btn.p.mp-auth-wa-btn,
 /* Availability Schedule Editor Semantic Classes */
 .mp-avail-wrap {
   background: var(--mp-glass-bg, rgba(255, 255, 255, 0.07));
-  backdrop-filter: blur(20px) saturate(1.35);
-  -webkit-backdrop-filter: blur(20px) saturate(1.35);
+  backdrop-filter: blur(10px) saturate(1.35);
+  -webkit-backdrop-filter: blur(10px) saturate(1.35);
   border: 1px solid var(--mp-glass-border, var(--line));
   border-radius: var(--mp-radius-card, 22px);
   padding: 16px;
@@ -19896,81 +19873,6 @@ html[data-theme] .shell .app-topbar::before,
   -webkit-mask-composite: xor;
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
-  pointer-events: none;
-  z-index: 2;
-}
-
-/* Dynamic Scroll & Movement Specular Sheen Across All Liquid Glass Panels & Cards */
-.shell .mp-branch-card::after,
-.shell .mp-surface-card::after,
-.shell .mp-addon-square-card::after,
-.shell .mp-appearance-layout-card::after,
-.shell .mp-appearance-theme-card::after,
-.shell .mp-appearance-shape-card::after,
-.shell .mp-estore-appearance-card::after,
-.shell .mp-estore-preview-frame::after,
-.mp-auth-page .card::after,
-.mp-onboard-shell .card::after,
-.ajax-box::after,
-.mp-od-sheet::after,
-.mp-select-modal-box::after,
-.mp-status-picker-card::after,
-.mp-act-modal-box::after,
-.mp-addon-modal-card::after,
-.mp-glass-modal::after,
-.profile-popover::after,
-html[data-theme] .shell .app-topbar::after,
-.home-root .nav::after,
-.shell .card::after,
-.shell .kp::after,
-.shell .mp-item-card::after,
-.shell .mp-set-card::after,
-.shell .mp-set2-panel::after,
-.shell .mp-set2-hero::after,
-.shell .mp-set2-tabs-bar::after,
-.shell .mp-home-shortcut-card::after,
-.shell .mp-home-tips-box::after,
-.shell .mp-stats-filter-card::after,
-.shell .mp-stats-hero-card::after,
-.shell .mp-stats-kpi-tile::after,
-.shell .mp-stats-panel::after,
-.shell .mp-stats-seg-track::after,
-.shell .mp-stats-mini-tabs::after,
-.shell .mp-orders-tabs::after,
-.shell .mp-appearance-mode-tabs::after,
-.shell .mp-order-row::after,
-.shell .mp-pwa-banner::after,
-.shell .mp-compass-search-bar::after,
-.shell .mp-tab-order-tile:not(.is-dragging)::after,
-.shell .mp-admin-settings-sections .mp-framed-box::after,
-.shell .mp-he-stage::after,
-.shell .mp-he-tabs::after,
-.shell .mp-he-plan-tabs::after,
-.shell .mp-acc-kpi-card::after,
-.shell .mp-acc-toolbar::after,
-.shell .mp-acc-table-card::after,
-.shell .mp-acc-mobile-card::after,
-.shell .mp-theme-icon-switch::after,
-.shell .mp-set2-seg-2::after,
-.home-root .card::after,
-.home-root .feature-compact-card::after,
-.home-root .mp-faq-card::after,
-.home-root .mp-auth-glass-card::after,
-.home-root .mp-explore-list::after,
-.home-root .mp-explore-phone-btn::after,
-.home-root .mp-pricing-billing-track::after,
-.mp-unified-card::after,
-.mp-onboard-step-card::after,
-.home-root .mp-pricing-card-anim::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background-image: var(--mp-glass-sheen);
-  background-size: 260% 260%;
-  background-position: var(--mp-glint-pos, 18%) 50%;
-  opacity: var(--mp-glint-opacity, 0.22);
-  transition: opacity 0.28s ease;
   pointer-events: none;
   z-index: 2;
 }
@@ -20534,8 +20436,8 @@ html[data-theme] .home-root textarea:focus,
   border-radius: var(--mp-radius-control, 14px);
   border: 1px solid var(--mp-glass-border, rgba(255, 255, 255, 0.14));
   background: var(--mp-glass-control, rgba(255, 255, 255, 0.045));
-  backdrop-filter: var(--mp-glass-control-blur, blur(8px) saturate(1.4));
-  -webkit-backdrop-filter: var(--mp-glass-control-blur, blur(8px) saturate(1.4));
+  backdrop-filter: var(--mp-glass-control-blur, blur(4px) saturate(1.4));
+  -webkit-backdrop-filter: var(--mp-glass-control-blur, blur(4px) saturate(1.4));
   box-shadow: var(--mp-glass-control-shadow);
   font-family: inherit;
   font-size: 15.5px;
